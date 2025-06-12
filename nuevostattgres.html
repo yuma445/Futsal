@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tigres de Medicina</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #1e1e1e, #2b2b2b);
+      color: white;
+      overflow-x: hidden;
+      padding-top: 80px;
+    }
+    header {
+            background: linear-gradient(105deg, #ff7f00, #5a2e01);
+            color: #faf8f8;
+            width: 100%;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 26px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #793d02;
+        }    
+    /*header {
+      background-color: #ff7f00;
+      color: #000;
+      text-align: center;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 4px 15px rgba(255, 128, 0, 0.6);
+      text-shadow: 1px 1px 2px #fff;
+    }*/
+   
+
+    .float-button { /* existing float-button styles */ }
+
+    .images-container { /* existing images-container styles */ }
+
+    /* Players list toggle */
+    .players-list {
+      max-height: 0;
+      overflow: hidden;
+      background-color: #222;
+      transition: max-height 0.6s ease;
+      margin: 20px;
+      padding: 0 20px;
+      border-left: 5px solid #ff7f00;
+      border-radius: 8px;
+    }
+    .players-list.open {
+      max-height: 800px;
+      padding: 20px;
+    }
+    .players-toggle {
+      display: block;
+      background-color: #ff7f00;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255,127,0,0.4);
+      transition: transform 0.3s ease;
+      margin: 20px;
+    }
+    .players-toggle:hover {
+      transform: scale(1.05);
+    }
+    .players-list ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .players-list li {
+      background-color: #333;
+      border: 2px solid #ff7f00;
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(255,127,0,0.4);
+    }
+    .players-list li:hover {
+      background-color: #444;
+      color: #ff7f00;
+      transform: translateY(-3px) scale(1.05);
+    }
+    /* other existing styles unchanged */
+  </style>
+</head>
+<body>
+  <header>Tigres de Medicina</header>
+
+  <div class="float-button" onclick="window.location.href='samsum.html'"> ... </div>
+
+  <!-- Club stats and images as before -->
+
+  <!-- Players Toggle Button -->
+  <button id="playersToggle" class="players-toggle">JUGADORES</button>
+
+  <!-- Players List -->
+  <div class="players-list" id="playersList">
+    <ul>
+      <li onclick="showPlayerInfo('Samuel Reiter Roles')">Samuel Reiter Roles</li>
+      <li onclick="showPlayerInfo('Oscar Perez Perez')">Oscar Perez Perez</li>
+      <li onclick="showPlayerInfo('Luis Megias Avila')">Luis Megias Avila</li>
+      <!-- rest of players unchanged -->
+    </ul>
+  </div>
+
+  <footer>© 2025 Liga Galenos. Todos los derechos reservados.</footer>
+
+  <script>
+    // Toggle players list
+    document.getElementById('playersToggle').addEventListener('click', function() {
+      document.getElementById('playersList').classList.toggle('open');
+    });
+
+    // Existing modal and chart JS unchanged...
+    function showPlayerInfo(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3> ...`;
+      document.getElementById('player-image').src = 'jugador image.png';
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function closeModal() { document.getElementById('player-modal').style.display = 'none'; }
+    // Club stats toggle as before
+    document.getElementById("clubStatsBtn").addEventListener("click", function () {
+      document.getElementById("club-stats").classList.toggle("open");
+    });
+  </script>
+</body>
+</html>

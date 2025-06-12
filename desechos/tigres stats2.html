@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tigres de Medicina</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #1e1e1e, #2b2b2b);
+      color: white;
+      overflow-x: hidden;
+      padding-top: 80px;
+    }
+
+    header {
+      background-color: #ff7f00;
+      color: #000;
+      text-align: center;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 4px 15px rgba(255, 128, 0, 0.6);
+      text-shadow: 1px 1px 2px #fff;
+    }
+
+    .images-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+    }
+
+    .team-image {
+      width: 45%;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 20px #ff7f00;
+      cursor: pointer;
+    }
+
+    .team-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #ff7f00, 0 0 40px #ff7f00 inset;
+    }
+
+    /* Panel de estadísticas oculto */
+    #club-stats {
+      max-height: 0;
+      overflow: hidden;
+      background-color: #222;
+      color: white;
+      margin: 20px;
+      padding: 0 20px;
+      border-left: 5px solid #ff7f00;
+      border-radius: 8px;
+      transition: max-height 0.6s ease, padding 0.3s ease;
+    }
+
+    #club-stats.open {
+      max-height: 1000px;
+      padding: 20px;
+    }
+
+    #club-stats h2 {
+      margin-bottom: 15px;
+      color: #ff7f00;
+      text-align: center;
+    }
+
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .stats-table th, .stats-table td {
+      border: 1px solid #ff7f00;
+      padding: 8px 12px;
+      text-align: center;
+    }
+
+    .stats-table th {
+      background-color: #ff7f00;
+      color: #000;
+    }
+
+    ul.achievements {
+      list-style: square;
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+
+    ul.achievements li {
+      margin: 8px 0;
+    }
+
+    canvas {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .team-image {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Tigres de Medicina</header>
+
+  <div class="images-container">
+    <img src="TIGRES.png" class="team-image" id="clubStatsBtn" alt="Logo Tigres" />
+    <img src="IMG-20250329-WA0003.jpg" class="team-image" alt="Logo 2" />
+  </div>
+  
+
+  <!-- Panel oculto de estadísticas -->
+  <div id="club-stats">
+    <h2>📊 Estadísticas del Club</h2>
+
+    <!-- Tabla de ejemplo -->
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Temporada</th>
+          <th>Partidos</th>
+          <th>Victorias</th>
+          <th>Empates</th>
+          <th>Derrotas</th>
+          <th>Goles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2022</td>
+          <td>18</td>
+          <td>12</td>
+          <td>3</td>
+          <td>3</td>
+          <td>34</td>
+        </tr>
+        <tr>
+          <td>2023</td>
+          <td>20</td>
+          <td>14</td>
+          <td>2</td>
+          <td>4</td>
+          <td>41</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Lista de logros -->
+    <h3>🏆 Logros del Club</h3>
+    <ul class="achievements">
+      <li>Campeón del torneo universitario 2023</li>
+      <li>Equipo más goleador del año 2022</li>
+      <li>Mejor defensa del torneo apertura 2023</li>
+    </ul>
+
+    <!-- Gráfica -->
+    <h3>📈 Rendimiento por Temporada</h3>
+    <canvas id="goalsChart" width="400" height="200"></canvas>
+  </div>
+
+  <script>
+    // Mostrar/ocultar el panel
+    document.getElementById("clubStatsBtn").addEventListener("click", function () {
+      const statsPanel = document.getElementById("club-stats");
+      statsPanel.classList.toggle("open");
+    });
+
+    // Gráfica con Chart.js
+    window.addEventListener("load", () => {
+      const ctx = document.getElementById("goalsChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["2021", "2022", "2023"],
+          datasets: [{
+            label: "Goles Anotados",
+            data: [28, 34, 41],
+            backgroundColor: "#ff7f00"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "#000"
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#000"
+              }
+            },
+            x: {
+              ticks: {
+                color: "#000"
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

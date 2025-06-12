@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página del Equipo de Fútbol Sala</title>
+<link rel="stylesheet" href="equipostyles.css">
+</head>
+<body>
+       
+
+</header>
+
+<main>
+
+<section id="equipos">
+<h1>Equipos</h1>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo1')">
+<img src="JUVE.png" alt="Escudo Equipo 1" class="team-logo">
+<div class="players" id="equipo1">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</section>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo2')">
+<img src="NUEVA ERA.png" alt="Escudo Equipo 2" class="team-logo">
+<div class="players" id="equipo2">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+</section>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo3')">
+<img src="INTER.png" alt="Escudo Equipo 3" class="team-logo">
+<div class="players" id="equipo3">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+</section>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo4')">
+<img src="BORUSIA.png" alt="Escudo Equipo 4" class="team-logo">
+<div class="players" id="equipo4">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo3')">
+<img src="DREAM TEAM.png" alt="Escudo Equipo 5" class="team-logo">
+<div class="players" id="equipo5">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo6')">
+<img src="VETERANOS.png" alt="Escudo Equipo 6" class="team-logo">
+<div class="players" id="equipo6">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo7')">
+<img src="PAKISTAN.png" alt="Escudo Equipo 7" class="team-logo">
+<div class="players" id="equipo7">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+<div class="team-container">
+<!-- Repite este bloque para cada equipo -->
+<div class="team" onclick="togglePlayers('equipo8')">
+<img src="TIGRES.png" alt="Escudo Equipo 8" class="team-logo">
+<div class="players" id="equipo8">
+<p onclick="showStats('YUMA Partidos jugados 2 partidos gamados 2 empates 0  disparos 7 goles 3')">YUMA</p>
+<p onclick="showStats('Abel Partidos jugados 2 partidos gamados 2 empates 0  disparos 3 goles 1 asist 2 ')">Abel</p>
+</div>
+</div>
+</div>
+
+
+
+<footer>
+<p>&copy; 2023 Equipo de Fútbol Sala</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

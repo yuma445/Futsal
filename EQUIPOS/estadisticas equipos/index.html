@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tigres de Medicina</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="team-logo">Tigres de Medicina</div>
+        <div class="team-nickname">Los Naranja</div>
+    </div>
+    
+    <nav class="menu">
+        <ul>
+            <li>Registros</li>
+            <li>Leyendas</li>
+            <li>Datos</li>
+        </ul>
+    </nav>
+
+    <div class="images-container">
+        <img src="TIGRES.png" class="team-image" id="image1" alt="Logo 1">
+        <img src="IMG-20250329-WA0003.jpg" class="team-image" id="image2" alt="Logo 2">
+    </div>
+
+    <div class="players-list">
+        <h2>Jugadores</h2>
+        <ul>
+            <li onclick="showPlayerInfo('Jugador 1')">Jugador 1</li>
+            <li onclick="showPlayerInfo('Jugador 2')">Jugador 2</li>
+            <li onclick="showPlayerInfo('Jugador 3')">Jugador 3</li>
+            <!-- Agrega más jugadores aquí -->
+        </ul>
+    </div>
+
+    <div id="player-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="player-image" src="" alt="Jugador" />
+            <div id="player-stats"></div>
+        </div>
+    </div>
+
+    <script src="3script.js"></script>
+</body>
+</html>

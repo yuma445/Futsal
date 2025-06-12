@@ -1,0 +1,63 @@
+body {
+    background-color: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+
+
+main {
+	padding-top: 60px; /*Agrega un margen superior para evitar que el contenido quede oculto bajo la barra de navegación */
+	}
+
+
+
+.team {
+    margin: 80px;
+    cursor: pointer;
+
+}
+.team-container {
+	overflow:hidden
+	}
+
+.team-logo {
+    width: 150px; /* Ajusta según sea necesario */
+	transition:transform 0.3s ease;
+	
+}
+
+.team-container:hover .team-logo {
+	transform: scale(1.6);
+}
+
+.players {
+    display: none; /* Oculto por defecto */
+}
+
+.players p:hover {
+    font-size: 1.1em;
+    color: #39FF14; /* Verde fosforescente */
+	transition:0.8s
+}
+
+/* Estilos para la sección de históricos */
+.historical-images img {
+    width: 100%; /* Ajusta según sea necesario */
+}
+.news-container {
+    text-align: center; /* Centra el contenido */
+}
+.slider-container {
+	display: flex;
+	width: 100%;
+	height: 100%
+	transition: transform 2.5s
+	ease-in-out;
+	}
+	slide {
+     min-width: 100%;
+	 height: 100%;
+	 }
+	 
+

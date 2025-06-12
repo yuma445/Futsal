@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipos - Liga Galenos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom right, #121212, #2e2e2e);
+            color: white;
+            padding-top: 80px;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #39ff14;
+            color: #000;
+            text-align: center;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+        }
+
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .team {
+            width: 45%;
+            max-width: 200px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .team-logo {
+            width: 100%;
+            border-radius: 15px;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            cursor: pointer;
+            box-shadow: 0 0 20px #39ff14;
+        }
+
+        .team-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #39ff14, 0 0 40px #39ff14 inset;
+        }
+
+        .players {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .players p {
+            margin: 5px 0;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .players p:hover {
+            color: #39ff14;
+            transform: scale(1.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+            color: #aaa;
+            margin-top: 40px;
+        }
+
+        .float-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 45px red;
+            z-index: 1001;
+            animation: pulse 2s infinite linear;
+        }
+
+        .float-button svg {
+            width: 26px;
+            height: 26px;
+            fill: black;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px red;
+            }
+            50% {
+                box-shadow: 0 0 25px red;
+            }
+            100% {
+                box-shadow: 0 0 10px red;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .team {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team {
+                width: 45%;
+            }
+
+            .float-button {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>Equipos</header>
+
+    <div class="float-button" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+            <path d="M541 229.16l-61-52.45V56a8 8 0 0 0-8-8h-48a8 8 0 0 0-8 8v72.61L314.41 43.06a35.35 35.35 0 0 0-46.86 0L35 229.16a8 8 0 0 0-1 11.31l21.41 24.51a8 8 0 0 0 11.31 1L96 241.36V456a24 24 0 0 0 24 24h112a8 8 0 0 0 8-8V344h96v128a8 8 0 0 0 8 8h112a24 24 0 0 0 24-24V241.36l29.29 24.63a8 8 0 0 0 11.31-1l21.41-24.51a8 8 0 0 0-1.02-11.31z" />
+        </svg>
+    </div>
+
+    <main>
+        <section class="team-container">
+            <div class="team">
+                <img src="JUVE.png" alt="JUVE" class="team-logo" onclick="location.href='juve.html'">
+                <div class="players" id="equipo1">
+                    <p onclick="showStats('YUMA Partidos jugados 2 partidos ganados 2 empates 0 disparos 7 goles 3')">YUMA</p>
+                    <p onclick="showStats('Abel Partidos jugados 2 partidos ganados 2 empates 0 disparos 3 goles 1 asist 2')">Abel</p>
+                </div>
+            </div>
+
+            <div class="team">
+                <img src="NUEVA ERA.png" alt="NUEVA ERA" class="team-logo" onclick="location.href='nuevaera.html'">
+                <div class="players" id="equipo2"></div>
+            </div>
+
+            <div class="team">
+                <img src="INTER.png" alt="INTER" class="team-logo" onclick="location.href='inter.html'">
+                <div class="players" id="equipo3"></div>
+            </div>
+
+            <div class="team">
+                <img src="BORUSIA.png" alt="BORUSIA" class="team-logo" onclick="location.href='borusia.html'">
+                <div class="players" id="equipo4"></div>
+            </div>
+
+            <div class="team">
+                <img src="DREAM TEAM.png" alt="DREAM TEAM" class="team-logo" onclick="location.href='dreamteam.html'">
+                <div class="players" id="equipo5"></div>
+            </div>
+
+            <div class="team">
+                <img src="VETERANOS.png" alt="VETERANOS" class="team-logo" onclick="location.href='veteranos.html'">
+                <div class="players" id="equipo6"></div>
+            </div>
+
+            <div class="team">
+                <img src="PAKISTAN.png" alt="PAKISTAN" class="team-logo" onclick="location.href='pakistan.html'">
+                <div class="players" id="equipo7"></div>
+            </div>
+
+            <div class="team">
+                <img src="TIGRES.png" alt="TIGRES" class="team-logo" onclick="location.href='tigres.html'">
+                <div class="players" id="equipo8"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2025 Liga Galenos. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        function togglePlayers(id) {
+            const section = document.getElementById(id);
+            section.style.display = section.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showStats(texto) {
+            alert(texto);
+        }
+    </script>
+</body>
+</html>

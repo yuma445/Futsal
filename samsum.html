@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIGA GALENOS</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom right, #1a1a1a, #2e2e2e);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background: linear-gradient(105deg, #39ff14, #1d700c);
+            color: #000;
+            width: 100%;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 26px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #1e750e;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            animation: orbit 2s infinite linear;
+            box-shadow: 0 0 15px #39ff14;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .logo:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px #39ff14, 0 0 30px #39ff14 inset;
+        }
+
+        @keyframes orbit {
+            0% { box-shadow: 0 0 10px #0b2507; }
+            50% { box-shadow: 0 0 40px #0c2c07; }
+            100% { box-shadow: 0 0 10px #081d05; }
+        }
+
+        .navbar {
+            margin-top: 90px;
+            width: 100%;
+            background-color: #3f3e3e;
+            display: flex;
+            justify-content: center;
+            padding-top: 15px ;
+            padding-bottom: 4px ;
+            border-bottom: 2px solid #1e750e;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .navbar a {
+            color: #fff;
+            padding: 10px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s, transform 0.3s;
+            display: inline-block;
+            text-align: center;
+            min-width: 20%;
+        }
+
+        .navbar a:hover {
+            background-color: #39ff14;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        #noticias {
+            width: 90%;
+            max-width: 600px;
+            margin: 100px auto 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            position: relative;
+        }
+
+        #slideshow {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        section {
+            width: 90%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        article {
+            background-color: #333;
+            border-left: 5px solid #39ff14;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        article:hover {
+            transform: translateY(-5px);
+        }
+
+        footer {
+            background-color: #111;
+            color: #aaa;
+            text-align: center;
+            padding: 15px 0;
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .navbar ul {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 5px;
+                padding: 0 5px;
+            }
+            .navbar a {
+                flex: 1 1 22%;
+                font-size: 14px;
+                padding: 8px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="LIGA GALES.png" alt="Logo" class="logo">
+        LIGA GALENOS
+    </header>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="#torneo">TORNEO</a></li>
+            <li><a href="samsumequipo.html">EQUIPOS</a></li>
+            <li><a href="#calendario">CALENDARIO</a></li>
+            <li><a href="Leyendas.html">LEYENDAS</a></li>
+        </ul>
+    </nav>
+
+    <aside id="noticias">
+        <img id="slideshow" src="IMG-20250329-WA0003.jpg" alt="Imagen de noticias">
+    </aside>
+
+    <section>
+        <article>Primero</article>
+        <article>Segundo</article>
+        <article>Tercero</article>
+        <article>Cuarto</article>
+    </section>
+
+    <footer>
+        © 2025 Liga Galenos. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        const images = [
+            'IMG-20250329-WA0003.jpg',
+            'IMG-20250329-WA0020.jpg',
+            'IMG-20250509-WA0041.jpg'
+        ];
+
+        let currentImageIndex = 0;
+
+        function changeImage() {
+            const slideshow = document.getElementById('slideshow');
+            slideshow.style.opacity = 0;
+            setTimeout(() => {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                slideshow.src = images[currentImageIndex];
+                slideshow.style.opacity = 1;
+            }, 400);
+        }
+
+        setInterval(changeImage, 5000);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('slideshow').src = images[currentImageIndex];
+        });
+    </script>
+</body>
+</html>

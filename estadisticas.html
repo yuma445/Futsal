@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadísticas Interactivas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      margin: 0;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #58a6ff;
+    }
+
+    .section {
+      margin: 40px auto;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .chart-container {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(56, 139, 253, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .chart-container:hover {
+      transform: scale(1.01);
+    }
+
+    .icon-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .icon-img:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 15px #58a6ff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      color: #c9d1d9;
+    }
+
+    table th, table td {
+      border: 1px solid #30363d;
+      padding: 12px;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #21262d;
+      color: #58a6ff;
+    }
+
+    .legend-icons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .tooltip {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #8b949e;
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="fade-in">Panel de Estadísticas Interactivas</h1>
+
+  <div class="section chart-container fade-in">
+    <h2>Distribución Visual</h2>
+    <canvas id="pieChart"></canvas>
+    <div class="legend-icons">
+      <img src="NUEVA ERA.png" alt="Nueva Era" class="icon-img" onclick="destacarSector(0)">
+      <img src="INTER.png" alt="Inter 1" class="icon-img" onclick="destacarSector(1)">
+      <img src="JUVE.png" alt="Juve" class="icon-img" onclick="destacarSector(2)">
+      <img src="BORUSIA.png" alt="Borusia" class="icon-img" onclick="destacarSector(4)">
+      <img src="DREAM TEAM.png" alt="Dream Team" class="icon-img" onclick="destacarSector(5)">
+      <img src="VETERANOS.png" alt="Veteranos" class="icon-img" onclick="destacarSector(6)">
+      <img src="PAKISTAN.png" alt="Pakistan" class="icon-img" onclick="destacarSector(7)">
+      <img src="TIGRES.png" alt="Tigres" class="icon-img" onclick="destacarSector(8)">
+    </div>
+    <div class="tooltip">Haz clic en una imagen para resaltar su información</div>
+  </div>
+
+  <div class="section chart-container fade-in">
+    <h2>Tabla de Datos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Valor</th>
+          <th>Porcentaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><img src="NUEVA ERA.png" class="icon-img"></td><td>300</td><td>10%</td></tr>
+        <tr><td><img src="INTER.png" class="icon-img"></td><td>200</td><td>7%</td></tr>
+        <tr><td><img src="JUVE.png" class="icon-img"></td><td>500</td><td>17%</td></tr>
+        <tr><td><img src="BORUSIA.png" class="icon-img"></td><td>150</td><td>5%</td></tr>
+        <tr><td><img src="DREAM TEAM.png" class="icon-img"></td><td>300</td><td>10%</td></tr>
+        <tr><td><img src="VETERANOS.png" class="icon-img"></td><td>300</td><td>10%</td></tr>
+        <tr><td><img src="PAKISTAN.png" class="icon-img"></td><td>350</td><td>11%</td></tr>
+        <tr><td><img src="TIGRES.png" class="icon-img"></td><td>650</td><td>22%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    let pieChart = new Chart(pieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Nueva Era', 'Inter1', 'Juve', 'Inter2', 'Borusia', 'Dream Team', 'Veteranos', 'Pakistan', 'Tigres'],
+        datasets: [{
+          label: 'Distribución (%)',
+          data: [10, 7, 17, 8, 5, 10, 10, 11, 22],
+          backgroundColor: ['#e63946', '#457b9d', '#f4a261', '#2a9d8f', '#a8dadc', '#ffb703', '#8ecae6', '#219ebc', '#adb5bd'],
+          hoverOffset: 30,
+          borderWidth: 3,
+          borderColor: '#0d1117'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Participación por Categoría (Interfaz Gráfica)',
+            color: '#58a6ff'
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.label + ': ' + context.raw + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    function destacarSector(index) {
+      const newData = pieChart.data.datasets[0].data.map((val, i) => i === index ? val * 1.2 : val);
+      pieChart.data.datasets[0].data = newData;
+      pieChart.update();
+      setTimeout(() => {
+        pieChart.data.datasets[0].data = [10, 7, 17, 8, 5, 10, 10, 11, 22];
+        pieChart.update();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

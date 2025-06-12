@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tigres de Medicina</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #1e1e1e, #2b2b2b);
+      color: white;
+      overflow-x: hidden;
+      padding-top: 80px;
+    }
+    header {
+            background: linear-gradient(105deg, #ff7f00, #5a2e01);
+            color: #faf8f8;
+            width: 100%;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 26px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #793d02;
+        }    
+    /*header {
+      background-color: #ff7f00;
+      color: #000;
+      text-align: center;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 4px 15px rgba(255, 128, 0, 0.6);
+      text-shadow: 1px 1px 2px #fff;
+    }*/
+.float-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: rgb(248, 246, 246);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .float-button::before {
+            content: "";
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px dashed rgb(245, 243, 243);
+            animation: spin 4s linear infinite;
+        }
+
+    /*.float-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: rgb(247, 244, 244);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1001;
+      animation: pulse 2s infinite;
+    }
+
+    .float-button svg {
+      width: 28px;
+      height: 28px;
+      fill: rgb(14, 1, 1);
+    }*/
+
+    /*@keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(17, 1, 1, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+    }*/
+      @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .float-button svg {
+            width: 32px;
+            height: 32px;
+            fill: black;
+            z-index: 1002;
+        }
+
+        @media (max-width: 768px) {
+            .team {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team {
+                width: 45%;
+                max-width: 160px;
+            }
+        }
+
+    nav.menu {
+      background-color: rgba(0, 0, 0, 0.6);
+      border-bottom: 4px solid #ff7f00;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      max-height: 0;
+    }
+
+    nav.menu.open {
+      max-height: 200px;
+    }
+
+    nav.menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav.menu li {
+      padding: 15px 20px;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    nav.menu li:hover {
+      color: #ff7f00;
+      transform: scale(1.05);
+    }
+
+    .images-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+    }
+
+    .team-image {
+      width: 45%;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 20px #ff7f00;
+      cursor: pointer;
+    }
+
+    .team-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #ff7f00, 0 0 40px #ff7f00 inset;
+    }
+
+    .players-list {
+      max-height: 0;
+      overflow: hidden;
+      background-color: #222;
+      transition: max-height 0.8s ease;
+      margin: 20px;
+      padding: 0 20px;
+      border-left: 5px solid #ff7f00;
+      border-radius: 8px;
+      }
+.players-list.open {
+      max-height: 800px;
+      padding: 20px;
+    }
+    .players-toggle {
+      display: block;
+      background-color: #ff7f00;
+      color: #f7f3f3;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255,127,0,0.4);
+      transition: transform 0.3s ease;
+      margin: 30px;
+      
+            
+           
+    }
+    .players-toggle:hover {
+      transform: scale(1.05);
+    }
+    .players-list h2 {
+      background-color: #ff7f00;
+      color: rgb(252, 249, 249);
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(255, 127, 0, 0.4);
+      text-align: center;
+      display: flex;
+      align-items: center;
+    }
+
+    .players-list ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .players-list li {
+      background-color: #333;
+      border: 2px solid #ff7f00;
+      border-radius: 10px;
+      padding: 10px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(255, 127, 0, 0.4);
+    }
+
+    .players-list li:hover {
+      background-color: #444;
+      color: #ff7f00;
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: #1c1c1c;
+      margin: 10% auto;
+      padding: 20px;
+      border: 2px solid #ff7f00;
+      box-shadow: 0 0 20px #ff7f00;
+      width: 90%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .modal-content img {
+      width: 150px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #ff7f00;
+    }
+
+    .modal-content .text {
+      flex-grow: 1;
+    }
+
+    .close {
+      color: red;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .close:hover {
+      transform: rotate(90deg) scale(1.3);
+    }
+
+    #club-stats {
+      max-height: 0;
+      overflow: hidden;
+      background-color: #222;
+      color: white;
+      margin: 20px;
+      padding: 0 20px;
+      border-left: 5px solid #ff7f00;
+      border-radius: 8px;
+      transition: max-height 0.6s ease, padding 0.3s ease;
+    }
+
+    #club-stats.open {
+      max-height: 1000px;
+      padding: 20px;
+    }
+
+    #club-stats h2, #club-stats h3 {
+      margin-bottom: 15px;
+      color: #ff7f00;
+      text-align: center;
+    }
+
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .stats-table th, .stats-table td {
+      border: 1px solid #ff7f00;
+      padding: 8px 12px;
+      text-align: center;
+    }
+
+    .stats-table th {
+      background-color: #ff7f00;
+      color: #000;
+    }
+
+    ul.achievements {
+      list-style: square;
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+
+    ul.achievements li {
+      margin: 8px 0;
+    }
+
+    canvas {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    article {
+            background-color: #333;
+            border-left: 5px solid #ff7f00;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        article:hover {
+            transform: translateY(-5px);
+        }
+footer {
+            background-color: #111;
+            color: #aaa;
+            text-align: center;
+            padding: 15px 0;
+            width: 100%;
+        }
+
+
+    @media (max-width: 480px) {
+      .team-image {
+        width: 90%;
+      }
+      .modal-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .modal-content img {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Tigres de Medicina</header>
+
+  <div class="float-button" onclick="window.location.href='samsum.html'">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+      <path d="M541 229.16l-61-52.45V56a8 8 0 0 0-8-8h-48a8 8 0 0 0-8 8v72.61L314.41 43.06a35.35 35.35 0 0 0-46.86 0L35 229.16a8 8 0 0 0-1 11.31l21.41 24.51a8 8 0 0 0 11.31 1L96 241.36V456a24 24 0 0 0 24 24h112a8 8 0 0 0 8-8V344h96v128a8 8 0 0 0 8 8h112a24 24 0 0 0 24-24V241.36l29.29 24.63a8 8 0 0 0 11.31-1l21.41-24.51a8 8 0 0 0-1.02-11.31z"/>
+    </svg>
+  </div>
+
+  <div class="images-container">
+    <img src="TIGRES.png" class="team-image" id="clubStatsBtn" alt="Logo 1">
+    </div>  
+  
+
+  <!--<div class="players-list">
+    <h2>JUGADORES</h2>
+    <ul>
+      <li onclick="showPlayerInfo('Samuel Reiter Roles')">Samuel Reiter Roles</li>
+      <li onclick="showPlayerInfo2('Oscar Perez Perez')">Oscar Perez Perez</li>
+      <li onclick="showPlayerInfo3('Luis Megias Avila')">Luis Megias Avila</li>
+      <li onclick="showPlayerInfo4('Edgar Leiva Ortega')">Edgar Leiva Ortega</li>
+      <li onclick="showPlayerInfo5('Mario Vargas Resio')">Mario Vargas Resio</li>
+      <li onclick="showPlayerInfo6('Mirrael Ochoa Matos')">Mirrael Ochoa Matos</li>
+      <li onclick="showPlayerInfo7('Edgar Julio Matos Gil')">Edgar Julio Matos Gil</li>
+      <li onclick="showPlayerInfo8('Cesar Prieto Romeo')">Cesar Prieto Romeo</li>
+      <li onclick="showPlayerInfo9('Amilcar Frometa Gomez')">Amilcar Frometa Gomez</li>
+      <li onclick="showPlayerInfo10('Leodam Alargo Rojas')">Leodam Alargo Rojas</li>
+      <li onclick="showPlayerInfo11('Miguel Ochoa Matos')">Miguel Ochoa Matos</li>
+      <li onclick="showPlayerInfo12('Edgar Puig Leal')">Edgar Puig Leal</li>
+      <li onclick="showPlayerInfo13('Samu Rojas Gómez')">Samu Rojas Gómez</li>
+      <li onclick="showPlayerInfo14('Eliseo Resio Resio')">liseo Resio Resio</li>
+        Más jugadores 
+    </ul>
+  </div>-->
+
+  <div id="player-modal" class="modal">
+    <div class="modal-content">
+      <img id="player-image" src="" alt="Jugador" />
+      <div class="text" id="player-stats"></div>
+      <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+  </div>
+
+  <div id="club-stats">
+    <h2>📊 Estadísticas del Club</h2>
+    <table class="stats-table">
+      <thead>
+        <tr><th>Temporada</th><th>2023</th><th>2024</th><th>2025</tr>
+      </thead>
+      <tbody>
+        <tr><td>Partidos</td><td>18</td><td>18</td><td>18</td></tr>
+        <tr><td>Victorias</td><td>15</td><td>14</td><td>12</td></tr>
+        <tr><td>Derrotas</td><td>3</td><td>2</td><td>3</td></tr>
+        <tr><td>Empates</td><td>0</td><td>2</td><td>3</td></tr>
+        <tr><td>GF</td><td>28</td><td>15</td><td>34</td></tr>
+        <tr><td>GC</td><td>20</td><td>10</td><td>20</td></tr>
+         <tr><td>DG</td><td>8</td><td>5</td><td>14</td></tr>
+      </tbody>
+    </table>
+    <h3>🏆 Logros del Club</h3>
+    <ul class="achievements">
+      <li>Campeón del torneo universitario 2023</li>
+      <li>Equipo más goleador del año 2022</li>
+      <li>Mejor defensa del torneo apertura 2023</li>
+    </ul>
+    <!--<h3>📈 Rendimiento por Temporada</h3> 
+    <canvas id="goalsChart" width="400" height="200"></canvas>-->
+  </div>
+  <div class="images-container"> 
+    <img src="IMG-20250329-WA0003.jpg" class="team-image"id="clubPlayerBtn" alt="Logo 2">
+  </div>
+  
+  
+  <!--<section>-->
+  
+    <button id="playersToggle" class="players-toggle">JUGADORES</button>
+
+  <!-- Players List -->
+  <div class="players-list" id="playersList">
+  <!--<div class="players-list">  
+    <div id="club-player">
+        </div>
+  <h2>JUGADORES</h2-->
+        <li onclick="showPlayerInfo1('Samuel Reiter Roles')">Samuel Reiter Roles</li>
+        <li onclick="showPlayerInfo2('Oscar Perez Perez')">Oscar Perez Perez</li>
+        <li onclick="showPlayerInfo3('Luis Megias Avila')">Luis Megias Avila</li>
+        <li onclick="showPlayerInfo4('Edgar Leiva Ortega')">Edgar Leiva Ortega</li>
+        <li onclick="showPlayerInfo5('Mario Vargas Resio')">Mario Vargas Resio</li>
+        <li onclick="showPlayerInfo6('Mirrael Ochoa Matos')">Mirrael Ochoa Matos</li>
+        <li onclick="showPlayerInfo7('Edgar Julio Matos Gil')">Edgar Julio Matos Gil</li>
+        <li onclick="showPlayerInfo8('Cesar Prieto Romeo')">Cesar Prieto Romeo</li>
+        <li onclick="showPlayerInfo9('Amilcar Frometa Gomez')">Amilcar Frometa Gomez</li>
+        <li onclick="showPlayerInfo10('Leodam Alargo Rojas')">Leodam Alargo Rojas</li>
+        <li onclick="showPlayerInfo11('Miguel Ochoa Matos')">Miguel Ochoa Matos</li>
+        <li onclick="showPlayerInfo12('Edgar Puig Leal')">Edgar Puig Leal</li>
+        <li onclick="showPlayerInfo13('Samu Rojas Gómez')">Samu Rojas Gómez</li>
+        <li onclick="showPlayerInfo14('Eliseo Resio Resio')">liseo Resio Resio</li>
+          <!--Más jugadores -->
+          </div>
+        
+    <!--</section>-->
+    
+    <footer>
+        © 2025 Liga Galenos. Todos los derechos reservados.
+    </footer> 
+
+  <script>
+    // Array para futuras imágenes a ciclar
+    const imageList = [
+      'IMG-20250329-WA0003.jpg', 
+      // Pon aquí más imágenes cuando quieras
+      'IMG-20250329-WA0005.jpg', 
+      'IMG-20250329-WA0009.jpg'
+    ];
+    let currentIndex = 0;
+
+    function cycleImages() {
+      const img = document.getElementById('clubPlayerBtn');
+      img.classList.add('hidden');
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % imageList.length;
+        img.src = imageList[currentIndex];
+        img.classList.remove('hidden');
+      }, 800); // coincide con el tiempo de la transición CSS
+    }
+
+    document.getElementById("clubPlayerBtn")
+      .addEventListener("click", cycleImages);
+
+    // Resto de tus scripts sin cambios:
+    function toggleMenu() {
+      document.getElementById("mainMenu").classList.toggle("open");
+    }
+    function showPlayerInfo1(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo2(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo3(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo4(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo5(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo6(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo7(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo8(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo9(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo10(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo11(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo12(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo13(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function showPlayerInfo14(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3>
+        <p>Posición: x</p>
+        <p>Partidos Jugados: 0</p>
+        <p>Goles Anotados: 0</p>
+        <p>Asistencias: 0</p>
+        <p>MVP: 0</p>
+        <p>Tarjetas Amarillas: 0</p>
+        <p>Tarjetas Rojas: 0</p>`;
+      document.getElementById('player-image').src = "jugador image.png";
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    function closeModal() {
+      document.getElementById('player-modal').style.display = 'none';
+    
+    }
+    
+
+    document.getElementById("clubStatsBtn").addEventListener("click", function () {
+      document.getElementById("club-stats").classList.toggle("open");
+      
+      
+    });
+    document.getElementById("clubPlayerBtn").addEventListener("click", function () {
+      document.getElementById("club-player").classList.toggle("open");
+      
+    });
+    window.addEventListener("load", () => {
+      const ctx = document.getElementById("goalsChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["2021", "2022", "2023"],
+          datasets: [{
+            label: "Goles Anotados",
+            data: [28, 34, 41],
+            backgroundColor: "#ff7f00"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: { color: "#000" }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { color: "#000" } },
+            x: { ticks: { color: "#000" } }
+          }
+          
+        }
+        
+      });
+    });
+       document.getElementById('playersToggle').addEventListener('click', function() {
+      document.getElementById('playersList').classList.toggle('open');
+    });
+
+    // Existing modal and chart JS unchanged...
+    function showPlayerInfo(player) {
+      document.getElementById('player-stats').innerHTML = `<h3>${player}</h3> ...`;
+      document.getElementById('player-image').src = 'jugador image.png';
+      document.getElementById('player-modal').style.display = 'block';
+    }
+    document.getElementById("desplegarBtn").addEventListener("click", () => {
+  const menu = document.getElementById("menu");
+  menu.classList.toggle("activo");
+
+});
+
+  </script>
+</body>
+</html>
