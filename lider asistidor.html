@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ranking de Jugadores - Neon Style</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #00fff7;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .ranking-container {
+      width: 100%;
+      max-width: 500px;
+      background: #111;
+      border: 1px solid #00fff7;
+      border-radius: 12px;
+      box-shadow: 0 0 6px rgba(0, 255, 247, 0.2);
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 1px #00fff7;
+      color: #00fff7;
+      letter-spacing: 2px;
+      font-size: 1.4rem;
+    }
+
+    ul.ranking-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li.player-item {
+      display: flex;
+      align-items: center;
+      background: #141414;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      padding: 10px;
+      box-shadow: 0 0 3px rgba(0, 255, 247, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    li.player-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 6px rgba(0, 255, 247, 0.3);
+    }
+
+    .rank-number {
+      font-size: 1.5rem;
+      font-weight: 900;
+      width: 30px;
+      text-align: center;
+      color: #00fff7;
+      text-shadow: 0 0 1px #00fff7;
+      flex-shrink: 0;
+    }
+
+    .player-photo {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 1px solid #00fff7;
+      object-fit: cover;
+      margin: 0 10px;
+      box-shadow: 0 0 3px rgba(0, 255, 247, 0.2);
+      flex-shrink: 0;
+    }
+
+    .player-info {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .player-name {
+      font-size: 1rem;
+      font-weight: 600;
+      text-shadow: 0 0 1px #00fff7;
+    }
+
+    .team-logo {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 0 1px rgba(0, 255, 247, 0.2));
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .floating-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 55px;
+      height: 55px;
+      background-color: #0d0d0d;
+      border-radius: 50%;
+      border: 2px solid #00fff7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      z-index: 1000;
+      box-shadow: 0 0 6px #00fff7;
+    }
+
+    .floating-button::before {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border: 2px dashed #00fff7;
+      border-radius: 50%;
+      animation: haloOrbit 3s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes haloOrbit {
+      0% {
+        transform: rotate(0deg) translateX(0) rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg) translateX(0) rotate(-360deg);
+      }
+    }
+
+    .floating-button svg {
+      width: 26px;
+      height: 26px;
+      fill: #00fff7;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00fff7;
+      border-radius: 6px;
+    }
+
+    @media(max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .player-photo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .team-logo {
+        width: 25px;
+        height: 25px;
+      }
+
+      .rank-number {
+        font-size: 1.3rem;
+        width: 25px;
+      }
+
+      .player-name {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ranking-container">
+    <h1>Ranking de Jugadores</h1>
+    <ul class="ranking-list">
+      <li class="player-item">
+        <div class="rank-number">1</div>
+        <img class="player-photo" src="https://i.imgur.com/L6XQJfA.jpg" alt="Jugador 1" />
+        <div class="player-info">
+          <span class="player-name">Lionel Messi</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Paris_Saint-Germain_F.C..svg/1200px-Paris_Saint-Germain_F.C..svg.png" alt="PSG Logo" />
+        </div>
+      </li>
+      <li class="player-item">
+        <div class="rank-number">2</div>
+        <img class="player-photo" src="https://i.imgur.com/DBbHt96.jpg" alt="Jugador 2" />
+        <div class="player-info">
+          <span class="player-name">Cristiano Ronaldo</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png" alt="Manchester United Logo" />
+        </div>
+      </li>
+      <li class="player-item">
+        <div class="rank-number">3</div>
+        <img class="player-photo" src="https://i.imgur.com/RhkdX4g.jpg" alt="Jugador 3" />
+        <div class="player-info">
+          <span class="player-name">Kylian Mbappé</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Paris_Saint-Germain_F.C..svg/1200px-Paris_Saint-Germain_F.C..svg.png" alt="PSG Logo" />
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <a href="https://example.com" class="floating-button" title="Ir a Inicio">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M3 12l9-9 9 9h-3v9h-4v-6H10v6H6v-9H3z"/>
+    </svg>
+  </a>
+</body>
+</html>

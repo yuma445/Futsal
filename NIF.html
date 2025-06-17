@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Noticias Interactivas</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #121217, #1f1f28);
+      color: #eee;
+      padding: 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background: linear-gradient(135deg, #004a99, #0066cc);
+      border: 1.8px solid #005bb5;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 91, 181, 0.6);
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      padding: 1rem 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.7rem;
+      color: #fff;
+    }
+    .float-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: rgb(248, 246, 246);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .float-button::before {
+            content: "";
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px dashed rgb(245, 243, 243);
+            animation: spin 4s linear infinite;
+        }
+
+    /*.float-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: rgb(247, 244, 244);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1001;
+      animation: pulse 2s infinite;
+    }
+
+    .float-button svg {
+      width: 28px;
+      height: 28px;
+      fill: rgb(14, 1, 1);
+    }*/
+
+    /*@keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(17, 1, 1, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+    }*/
+      @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .float-button svg {
+            width: 32px;
+            height: 32px;
+            fill: #004a99;
+            z-index: 1002;
+        }
+
+        @media (max-width: 768px) {
+            .team {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team {
+                width: 45%;
+                max-width: 160px;
+            }
+        }
+
+    #authBtn {
+      margin-bottom: 1rem;
+      background: #00fff7;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7rem 1.5rem;
+      font-weight: 700;
+      color: #121217;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00fff7aa;
+      transition: background-color 0.3s ease;
+    }
+    #authBtn:hover {
+      background-color: #00d7cc;
+    }
+
+    .news-container {
+      max-width: 600px;
+      width: 100%;
+      background: #1c1c24;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 255, 247, 0.15), inset 0 0 10px rgba(0, 255, 247, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .news-image {
+      width: 100%;
+      border-bottom: 3px solid #00fff7;
+      border-radius: 14px 14px 0 0;
+      object-fit: cover;
+      max-height: 350px;
+    }
+
+    .reaction-bar {
+      display: flex;
+      justify-content: space-around;
+      background: #22222b;
+      border-top: 1.5px solid #00fff7;
+      padding: 0.8rem 0;
+    }
+
+    .reaction-bar button {
+      background: transparent;
+      border: 2px solid #00fff7;
+      border-radius: 50%;
+      color: #00fff7;
+      font-size: 1.4rem;
+      cursor: pointer;
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 2px #00fff7);
+    }
+
+    .reaction-bar button span.count {
+      position: absolute;
+      bottom: -1.4rem;
+      font-size: 0.75rem;
+      color: #80ffff;
+      font-weight: 600;
+    }
+
+    .reaction-bar button:hover {
+      transform: scale(1.1);
+      background-color: #00fff7;
+      color: #121217;
+      filter: drop-shadow(0 0 5px #00fff7);
+    }
+
+    .reaction-bar button.active {
+      background-color: #00fff7;
+      color: #121217;
+      filter: drop-shadow(0 0 8px #00fff7);
+      transform: scale(1.15);
+    }
+
+    .reaction-bar button.heart {
+      border-color: #ff4d88;
+      color: #ff4d88;
+      filter: drop-shadow(0 0 3px #ff4d88);
+    }
+
+    .reaction-bar button.heart:hover {
+      background-color: #ff4d88;
+      color: #fff;
+    }
+
+    .reaction-bar button.heart.active {
+      background-color: #ff4d88;
+      color: #fff;
+      filter: drop-shadow(0 0 12px #ff4d88);
+    }
+
+    .comments-section {
+      padding: 1rem 1.2rem;
+      font-size: 1rem;
+      color: #cceeff;
+      overflow-y: auto;
+      max-height: 320px;
+      scroll-behavior: smooth;
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .comment-input input {
+      flex-grow: 1;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      border: 1.5px solid #00fff7;
+      background: #121217;
+      color: #e0f7ff;
+      font-size: 1rem;
+    }
+
+    .comment-input input:disabled {
+      background: #333;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    .comment-input button {
+      background: #00fff7;
+      border: none;
+      border-radius: 10px;
+      padding: 0 1.3rem;
+      font-weight: 700;
+      color: #121217;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    .comment-input button:disabled {
+      background: #004d53;
+      cursor: not-allowed;
+    }
+    .comment-input button:hover:not(:disabled) {
+      background-color: #00d7cc;
+    }
+
+    .comment { border-top: 1px solid #333; padding: 0.45rem 0; }
+
+    .comment strong { color: #00fff7; }
+
+  </style>
+
+  <!-- Firebase SDKs (v10 modular) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import {
+      getFirestore, collection, addDoc, onSnapshot, query, orderBy,
+      doc, setDoc, getDocs
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // — Tu configuración Firebase (REEMPLAZA con la tuya) —
+    const firebaseConfig = {
+  apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
+  authDomain: "noticias-interactivas.firebaseapp.com",
+  projectId: "noticias-interactivas",
+  storageBucket: "noticias-interactivas.firebasestorage.app",
+  messagingSenderId: "859594674987",
+  appId: "1:859594674987:web:7f785faac0d67fd0e5ab6e",
+  measurementId: "G-YWKL9LX6Y0"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let user = null;
+
+    // Referencias a colecciones
+    const commentsCol = collection(db, 'comentarios');
+    const reactionsCol = collection(db, 'reacciones');
+
+    // Sanitizar texto para evitar XSS
+    function sanitize(text) {
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
+
+    // Autenticación
+    window.login = () => signInWithPopup(auth, provider);
+    window.logout = () => signOut(auth);
+
+    onAuthStateChanged(auth, u => {
+      user = u;
+      const authBtn = document.getElementById('authBtn');
+      const commentInput = document.getElementById('commentInput');
+      const sendBtn = document.getElementById('sendBtn');
+
+      if (u) {
+        authBtn.textContent = 'Cerrar sesión (' + u.displayName + ')';
+        commentInput.disabled = false;
+        sendBtn.disabled = false;
+      } else {
+        authBtn.textContent = 'Iniciar sesión con Google';
+        commentInput.disabled = true;
+        sendBtn.disabled = true;
+      }
+      renderReactions();
+    });
+
+    // Agregar comentario
+    window.addComment = async () => {
+      const input = document.getElementById('commentInput');
+      const txt = input.value.trim();
+      if (!txt || !user) return;
+      await addDoc(commentsCol, {
+        user: user.displayName,
+        uid: user.uid,
+        text: txt,
+        timestamp: Date.now()
+      });
+      input.value = '';
+    };
+
+    // Renderizar comentarios en tiempo real
+    const renderComments = () => {
+      const cont = document.getElementById('comments');
+      const q = query(commentsCol, orderBy('timestamp'));
+      onSnapshot(q, snap => {
+        cont.innerHTML = '';
+        snap.forEach(doc => {
+          const c = doc.data();
+          const el = document.createElement('div');
+          el.className = 'comment';
+          el.innerHTML = `<strong>${sanitize(c.user)}:</strong> ${sanitize(c.text)}`;
+          cont.appendChild(el);
+        });
+        // Auto scroll al último comentario
+        cont.scrollTop = cont.scrollHeight;
+      });
+    };
+
+    // Toggle reacciones únicas por usuario
+    window.toggleReaction = async type => {
+      if (!user) return;
+      const ref = doc(db, 'reacciones', user.uid);
+      const snap = await getDocs(reactionsCol);
+      const docUser = snap.docs.find(d => d.id === user.uid);
+      const current = docUser ? docUser.data().type : null;
+      const newType = current === type ? null : type;
+      await setDoc(ref, { type: newType, uid: user.uid });
+      renderReactions();
+    };
+
+    // Mostrar conteo y estado de reacciones
+    window.renderReactions = async () => {
+      const snap = await getDocs(reactionsCol);
+      const totals = { like: 0, dislike: 0, love: 0 };
+      let userType = null;
+      snap.forEach(d => {
+        const r = d.data().type;
+        if (r && totals[r] !== undefined) totals[r]++;
+        if (d.id === (user && user.uid)) userType = r;
+      });
+      document.querySelectorAll('.reaction-bar button').forEach(btn => {
+        const t = btn.dataset.type;
+        btn.querySelector('.count').textContent = totals[t] || 0;
+        btn.classList.toggle('active', userType === t);
+      });
+    };
+
+    // Inicializar al cargar la página
+    window.onload = () => {
+      renderComments();
+      renderReactions();
+    };
+  </script>
+</head>
+<div class="float-button" onclick="window.location.href='index.html'">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+      <path d="M541 229.16l-61-52.45V56a8 8 0 0 0-8-8h-48a8 8 0 0 0-8 8v72.61L314.41 43.06a35.35 35.35 0 0 0-46.86 0L35 229.16a8 8 0 0 0-1 11.31l21.41 24.51a8 8 0 0 0 11.31 1L96 241.36V456a24 24 0 0 0 24 24h112a8 8 0 0 0 8-8V344h96v128a8 8 0 0 0 8 8h112a24 24 0 0 0 24-24V241.36l29.29 24.63a8 8 0 0 0 11.31-1l21.41-24.51a8 8 0 0 0-1.02-11.31z"/>
+    </svg>
+  </div>
+
+<body>
+  <header>Noticias Interactivas</header>
+  <button id="authBtn" onclick="user ? logout() : login()">Iniciar sesión con Google</button>
+
+  <div class="news-container">
+    <img src="IMG-20250509-WA0040.jpg" alt="Futbolista en acción" class="news-image" />
+
+    <div class="reaction-bar">
+      <button onclick="toggleReaction('like')" data-type="like">👍 <span class="count">0</span></button>
+      <button onclick="toggleReaction('dislike')" data-type="dislike">👎 <span class="count">0</span></button>
+      <button class="heart" onclick="toggleReaction('love')" data-type="love">❤ <span class="count">0</span></button>
+    </div>
+
+    <section class="comments-section">
+      <div class="comment-input">
+        <input type="text" id="commentInput" placeholder="Escribe un comentario..." disabled onkeydown="if(event.key==='Enter') addComment()">
+        <button id="sendBtn" onclick="addComment()" disabled>Enviar</button>
+      </div>
+      <div id="comments"></div>
+    </section>
+  </div>
+</body>
+</html>

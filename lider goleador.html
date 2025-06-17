@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ranking de Jugadores - Neon Style</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #00fff7;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem;
+      user-select: none;
+    }
+
+    .ranking-container {
+      width: 100%;
+      max-width: 700px;
+      background: #111;
+      border: 2px solid #00fff7;
+      border-radius: 12px;
+      box-shadow:
+        0 0 5px #00fff7,
+        0 0 15px #00fff7,
+        0 0 20px #00fff7,
+        0 0 40px #00fff7 inset;
+      padding: 1rem 1.5rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px #00fff7;
+      color: #00fff7;
+      letter-spacing: 3px;
+    }
+
+    ul.ranking-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li.player-item {
+      display: flex;
+      align-items: center;
+      background: #141414;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      padding: 10px 15px;
+      box-shadow:
+        0 0 8px #00fff7,
+        inset 0 0 8px #00fff7;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+    }
+
+    li.player-item:hover {
+      transform: scale(1.05);
+      box-shadow:
+        0 0 15px #00fff7,
+        inset 0 0 20px #00fff7;
+      background: #222;
+    }
+
+    .rank-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      width: 50px;
+      text-align: center;
+      color: #00fff7;
+      text-shadow: 0 0 10px #00fff7;
+      flex-shrink: 0;
+    }
+
+    .player-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #00fff7;
+      object-fit: cover;
+      margin: 0 15px;
+      box-shadow: 0 0 10px #00fff7;
+      flex-shrink: 0;
+    }
+
+    .player-info {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .player-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-shadow: 0 0 6px #00fff7;
+    }
+
+    .team-logo {
+      width: 40px;
+      height: 40px;
+      filter: drop-shadow(0 0 5px #00fff7);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Scrollbar dark style */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00fff7;
+      border-radius: 10px;
+    }
+
+    @media(max-width: 480px) {
+      .player-photo {
+        width: 50px;
+        height: 50px;
+      }
+      .team-logo {
+        width: 30px;
+        height: 30px;
+      }
+      .rank-number {
+        font-size: 1.7rem;
+        width: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ranking-container">
+    <h1>Ranking de Jugadores</h1>
+    <ul class="ranking-list">
+      <li class="player-item">
+        <div class="rank-number">1</div>
+        <img class="player-photo" src="https://i.imgur.com/L6XQJfA.jpg" alt="Jugador 1" />
+        <div class="player-info">
+          <span class="player-name">Lionel Messi</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Paris_Saint-Germain_F.C..svg/1200px-Paris_Saint-Germain_F.C..svg.png" alt="PSG Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">2</div>
+        <img class="player-photo" src="https://i.imgur.com/DBbHt96.jpg" alt="Jugador 2" />
+        <div class="player-info">
+          <span class="player-name">Cristiano Ronaldo</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png" alt="Manchester United Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">3</div>
+        <img class="player-photo" src="https://i.imgur.com/RhkdX4g.jpg" alt="Jugador 3" />
+        <div class="player-info">
+          <span class="player-name">Kylian Mbappé</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Paris_Saint-Germain_F.C..svg/1200px-Paris_Saint-Germain_F.C..svg.png" alt="PSG Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">4</div>
+        <img class="player-photo" src="https://i.imgur.com/6EmMsnX.jpg" alt="Jugador 4" />
+        <div class="player-info">
+          <span class="player-name">Neymar Jr</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Paris_Saint-Germain_F.C..svg/1200px-Paris_Saint-Germain_F.C..svg.png" alt="PSG Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">5</div>
+        <img class="player-photo" src="https://i.imgur.com/h8vCsQp.jpg" alt="Jugador 5" />
+        <div class="player-info">
+          <span class="player-name">Kevin De Bruyne</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/1200px-Manchester_City_FC_badge.svg.png" alt="Manchester City Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">6</div>
+        <img class="player-photo" src="https://i.imgur.com/TQvMkDc.jpg" alt="Jugador 6" />
+        <div class="player-info">
+          <span class="player-name">Robert Lewandowski</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/FC_Bayern_München_logo_(2017).svg/1200px-FC_Bayern_München_logo_(2017).svg.png" alt="Bayern Munich Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">7</div>
+        <img class="player-photo" src="https://i.imgur.com/1fxF1T3.jpg" alt="Jugador 7" />
+        <div class="player-info">
+          <span class="player-name">Mohamed Salah</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/1200px-Liverpool_FC.svg.png" alt="Liverpool Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">8</div>
+        <img class="player-photo" src="https://i.imgur.com/k6eC6N3.jpg" alt="Jugador 8" />
+        <div class="player-info">
+          <span class="player-name">Erling Haaland</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/1200px-Manchester_City_FC_badge.svg.png" alt="Manchester City Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">9</div>
+        <img class="player-photo" src="https://i.imgur.com/p6L6lhn.jpg" alt="Jugador 9" />
+        <div class="player-info">
+          <span class="player-name">Luka Modrić</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png" alt="Real Madrid Logo" />
+        </div>
+      </li>
+
+      <li class="player-item">
+        <div class="rank-number">10</div>
+        <img class="player-photo" src="https://i.imgur.com/dyqlP3K.jpg" alt="Jugador 10" />
+        <div class="player-info">
+          <span class="player-name">Sadio Mané</span>
+          <img class="team-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/1200px-Liverpool_FC.svg.png" alt="Liverpool Logo" />
+        </div>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
