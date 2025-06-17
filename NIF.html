@@ -160,7 +160,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, onSnapshot, doc, setDoc, getDoc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
@@ -175,70 +175,51 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
-
     let currentUser = null;
 
-    // Sanitiza texto para evitar inyección de HTML
     function sanitize(text) {
-      const d = document.createElement('div');
-      d.textContent = text;
-      return d.innerHTML;
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
     }
 
-    // Botón iniciar/cerrar sesión
-    window.login = () => {
-      signInWithPopup(auth, provider).catch(console.error);
-    };
-    window.logout = () => {
-      signOut(auth).catch(console.error);
-    };
-
-    // Cambia el texto y habilita/deshabilita input y botón según estado auth
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      const authBtn = document.getElementById('authBtn');
-      const commentInput = document.getElementById('commentInput');
-      const sendBtn = document.getElementById('sendBtn');
-      if(user) {
-        authBtn.textContent = `Cerrar sesión (${user.displayName})`;
-        commentInput.disabled = false;
-        sendBtn.disabled = false;
-      } else {
-        authBtn.textContent = 'Iniciar sesión con Google';
-        commentInput.disabled = true;
-        sendBtn.disabled = true;
-      }
-      renderReactions();
-    });
-
-    // Añadir comentario a Firestore
-    window.addComment = async () => {
+    async function toggleReaction(type) {
       if (!currentUser) return;
-      const txt = document.getElementById('commentInput').value.trim();
-      if (!txt) return;
-      try {
-        await addDoc(collection(db, 'comentarios'), {
-          user: currentUser.displayName,
-          uid: currentUser.uid,
-          text: txt,
-          timestamp: new Date() // Para ordenar localmente (Firestore ServerTimestamp requires extra import)
-        });
-        document.getElementById('commentInput').value = '';
-      } catch(e) {
-        console.error(e);
-      }
-    };
+      const ref = doc(db, "reacciones", currentUser.uid);
+      const snap = await getDoc(ref);
+      const current = snap.exists() ? snap.data().type : null;
+      const newType = current === type ? null : type;
+      await setDoc(ref, { type: newType, uid: currentUser.uid });
+      renderReactions();
+    }
 
-    // Renderizar comentarios en tiempo real
+    async function renderReactions() {
+      const snap = await getDocs(collection(db, "reacciones"));
+      const totals = { like: 0, dislike: 0, love: 0 };
+      let userType = null;
+
+      snap.forEach(d => {
+        const r = d.data().type;
+        if (r && totals[r] !== undefined) totals[r]++;
+        if (d.id === (currentUser && currentUser.uid)) userType = r;
+      });
+
+      document.querySelectorAll(".reaction-bar button").forEach(btn => {
+        const type = btn.dataset.type;
+        btn.querySelector(".count").textContent = totals[type] || 0;
+        btn.classList.toggle("active", userType === type);
+      });
+    }
+
     function renderComments() {
-      const cont = document.getElementById('comments');
-      const q = query(collection(db, 'comentarios'), orderBy('timestamp'));
-      onSnapshot(q, (snapshot) => {
-        cont.innerHTML = '';
-        snapshot.forEach(docu => {
-          const c = docu.data();
-          const div = document.createElement('div');
-          div.className = 'comment';
+      const q = query(collection(db, "comentarios"), orderBy("timestamp"));
+      onSnapshot(q, snap => {
+        const cont = document.getElementById("comments");
+        cont.innerHTML = "";
+        snap.forEach(doc => {
+          const c = doc.data();
+          const div = document.createElement("div");
+          div.className = "comment";
           div.innerHTML = `<strong>${sanitize(c.user)}:</strong> ${sanitize(c.text)}`;
           cont.appendChild(div);
         });
@@ -246,45 +227,38 @@
       });
     }
 
-    // Cambiar reacción del usuario
-    window.toggleReaction = async (type) => {
-      if (!currentUser) return;
-      const reactionRef = doc(db, 'reacciones', currentUser.uid);
-      try {
-        const docSnap = await getDoc(reactionRef);
-        const currentType = docSnap.exists() ? docSnap.data().type : null;
-        const newType = (currentType === type) ? null : type;
-        await setDoc(reactionRef, { type: newType, uid: currentUser.uid });
-        renderReactions();
-      } catch(e) {
-        console.error(e);
+    async function addComment() {
+      const input = document.getElementById("commentInput");
+      const txt = input.value.trim();
+      if (!txt || !currentUser) return;
+      await addDoc(collection(db, "comentarios"), {
+        user: currentUser.displayName,
+        uid: currentUser.uid,
+        text: txt,
+        timestamp: serverTimestamp()
+      });
+      input.value = "";
+    }
+
+    document.getElementById("authBtn").onclick = () => {
+      if (currentUser) {
+        signOut(auth);
+      } else {
+        signInWithPopup(auth, provider);
       }
     };
 
-    // Renderizar conteo y estado de botones de reacciones
-    async function renderReactions() {
-      const snapshot = await getFirestore(db).collection ? // Quick check for safety
-        await getFirestore(db).collection('reacciones').get() : null;
-      // Pero getFirestore(db).collection no funciona así en modular, hay que usar getDocs(collection(db,...))
-      // Corregimos:
-      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({ getDocs, collection }) => {
-        getDocs(collection(db, 'reacciones')).then(snapshot => {
-          const totals = { like: 0, dislike: 0, love: 0 };
-          let userType = null;
-          snapshot.forEach(d => {
-            const r = d.data().type;
-            if (r && totals[r] !== undefined) totals[r]++;
-            if (d.id === (currentUser && currentUser.uid)) userType = r;
-          });
-          document.querySelectorAll('.reaction-bar button').forEach(btn => {
-            btn.querySelector('.count').textContent = totals[btn.dataset.type] || 0;
-            btn.classList.toggle('active', userType === btn.dataset.type);
-          });
-        });
-      }).catch(console.error);
-    }
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      document.getElementById("authBtn").textContent = user ? `Cerrar sesión (${user.displayName})` : "Iniciar sesión con Google";
+      document.getElementById("commentInput").disabled = !user;
+      document.getElementById("sendBtn").disabled = !user;
+      renderReactions();
+    });
 
-    // Inicializa comentarios y reacciones al cargar la página
+    window.toggleReaction = toggleReaction;
+    window.addComment = addComment;
+
     window.onload = () => {
       renderComments();
       renderReactions();
@@ -293,7 +267,7 @@
 </head>
 <body>
   <header>Noticias Interactivas</header>
-  <button id="authBtn" onclick="currentUser ? logout() : login()">Iniciar sesión con Google</button>
+  <button id="authBtn">Iniciar sesión con Google</button>
   <div class="news-container">
     <img src="IMG-20250509-WA0040.jpg" alt="Noticia destacada" class="news-image" />
     <div class="reaction-bar">
@@ -310,7 +284,9 @@
     </section>
   </div>
   <div class="float-button" onclick="window.location.href='index.html'">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M541 229.16l-61-52.45V56a8 8 0 0 0-8-8h-48a8 8 0 0 0-8 8v72.61L314.41 43.06a35.35 35.35 0 0 0-46.86 0L35 229.16a8 8 0 0 0-1 11.31l21.41 24.51a8 8 0 0 0 11.31 1L96 241.36V456a24 24 0 0 0 24 24h112a8 8 0 0 0 8-8V344h96v128a8 8 aummet371"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+      <path d="M541 229.16l-61-52.45V56a8 8 0 0 0-8-8h-48a8 8 0 0 0-8 8v72.61L314.41 43.06a35.35 35.35 0 0 0-46.86 0L35 229.16a8 8 0 0 0-1 11.31l21.41 24.51a8 8 0 0 0 11.31 1L96 241.36V456a24 24 0 0 0 24 24h112a8 8 0 0 0 8-8V344h96v128a8 8 aummet371"/>
+    </svg>
   </div>
 </body>
 </html>
