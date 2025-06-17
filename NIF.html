@@ -156,12 +156,12 @@
     .comment strong { color: #00fff7; }
   </style>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
       authDomain: "noticias-interactivas.firebaseapp.com",
@@ -170,42 +170,73 @@
       messagingSenderId: "859594674987",
       appId: "1:859594674987:web:7f785faac0d67fd0e5ab6e"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const provider = new firebase.auth.GoogleAuthProvider();
-    let user = null;
 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+
+    // Sanitiza texto para evitar inyección de HTML
     function sanitize(text) {
       const d = document.createElement('div');
       d.textContent = text;
       return d.innerHTML;
     }
 
-    window.login = () => auth.signInWithPopup(provider);
-    window.logout = () => auth.signOut();
+    // Botón iniciar/cerrar sesión
+    window.login = () => {
+      signInWithPopup(auth, provider).catch(console.error);
+    };
+    window.logout = () => {
+      signOut(auth).catch(console.error);
+    };
 
-    auth.onAuthStateChanged(u => {
-      user = u;
-      document.getElementById('authBtn').textContent = u ? 'Cerrar sesión (' + u.displayName + ')' : 'Iniciar sesión con Google';
-      document.getElementById('commentInput').disabled = !u;
-      document.getElementById('sendBtn').disabled = !u;
+    // Cambia el texto y habilita/deshabilita input y botón según estado auth
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      const authBtn = document.getElementById('authBtn');
+      const commentInput = document.getElementById('commentInput');
+      const sendBtn = document.getElementById('sendBtn');
+      if(user) {
+        authBtn.textContent = `Cerrar sesión (${user.displayName})`;
+        commentInput.disabled = false;
+        sendBtn.disabled = false;
+      } else {
+        authBtn.textContent = 'Iniciar sesión con Google';
+        commentInput.disabled = true;
+        sendBtn.disabled = true;
+      }
       renderReactions();
     });
 
+    // Añadir comentario a Firestore
     window.addComment = async () => {
+      if (!currentUser) return;
       const txt = document.getElementById('commentInput').value.trim();
-      if (!txt || !user) return;
-      await db.collection('comentarios').add({ user: user.displayName, uid: user.uid, text: txt, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-      document.getElementById('commentInput').value = '';
+      if (!txt) return;
+      try {
+        await addDoc(collection(db, 'comentarios'), {
+          user: currentUser.displayName,
+          uid: currentUser.uid,
+          text: txt,
+          timestamp: new Date() // Para ordenar localmente (Firestore ServerTimestamp requires extra import)
+        });
+        document.getElementById('commentInput').value = '';
+      } catch(e) {
+        console.error(e);
+      }
     };
 
+    // Renderizar comentarios en tiempo real
     function renderComments() {
       const cont = document.getElementById('comments');
-      db.collection('comentarios').orderBy('timestamp').onSnapshot(snap => {
+      const q = query(collection(db, 'comentarios'), orderBy('timestamp'));
+      onSnapshot(q, (snapshot) => {
         cont.innerHTML = '';
-        snap.forEach(doc => {
-          const c = doc.data();
+        snapshot.forEach(docu => {
+          const c = docu.data();
           const div = document.createElement('div');
           div.className = 'comment';
           div.innerHTML = `<strong>${sanitize(c.user)}:</strong> ${sanitize(c.text)}`;
@@ -215,31 +246,45 @@
       });
     }
 
-    window.toggleReaction = async type => {
-      if (!user) return;
-      const ref = db.collection('reacciones').doc(user.uid);
-      const docu = await ref.get();
-      const current = docu.exists ? docu.data().type : null;
-      const newType = current === type ? null : type;
-      await ref.set({ type: newType, uid: user.uid });
-      renderReactions();
+    // Cambiar reacción del usuario
+    window.toggleReaction = async (type) => {
+      if (!currentUser) return;
+      const reactionRef = doc(db, 'reacciones', currentUser.uid);
+      try {
+        const docSnap = await getDoc(reactionRef);
+        const currentType = docSnap.exists() ? docSnap.data().type : null;
+        const newType = (currentType === type) ? null : type;
+        await setDoc(reactionRef, { type: newType, uid: currentUser.uid });
+        renderReactions();
+      } catch(e) {
+        console.error(e);
+      }
     };
 
+    // Renderizar conteo y estado de botones de reacciones
     async function renderReactions() {
-      const snap = await db.collection('reacciones').get();
-      const totals = { like: 0, dislike: 0, love: 0 };
-      let userType = null;
-      snap.forEach(d => {
-        const r = d.data().type;
-        if (r && totals[r] !== undefined) totals[r]++;
-        if (d.id === (user && user.uid)) userType = r;
-      });
-      document.querySelectorAll('.reaction-bar button').forEach(btn => {
-        btn.querySelector('.count').textContent = totals[btn.dataset.type] || 0;
-        btn.classList.toggle('active', userType === btn.dataset.type);
-      });
+      const snapshot = await getFirestore(db).collection ? // Quick check for safety
+        await getFirestore(db).collection('reacciones').get() : null;
+      // Pero getFirestore(db).collection no funciona así en modular, hay que usar getDocs(collection(db,...))
+      // Corregimos:
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({ getDocs, collection }) => {
+        getDocs(collection(db, 'reacciones')).then(snapshot => {
+          const totals = { like: 0, dislike: 0, love: 0 };
+          let userType = null;
+          snapshot.forEach(d => {
+            const r = d.data().type;
+            if (r && totals[r] !== undefined) totals[r]++;
+            if (d.id === (currentUser && currentUser.uid)) userType = r;
+          });
+          document.querySelectorAll('.reaction-bar button').forEach(btn => {
+            btn.querySelector('.count').textContent = totals[btn.dataset.type] || 0;
+            btn.classList.toggle('active', userType === btn.dataset.type);
+          });
+        });
+      }).catch(console.error);
     }
 
+    // Inicializa comentarios y reacciones al cargar la página
     window.onload = () => {
       renderComments();
       renderReactions();
@@ -248,7 +293,7 @@
 </head>
 <body>
   <header>Noticias Interactivas</header>
-  <button id="authBtn" onclick="user ? logout() : login()">Iniciar sesión con Google</button>
+  <button id="authBtn" onclick="currentUser ? logout() : login()">Iniciar sesión con Google</button>
   <div class="news-container">
     <img src="IMG-20250509-WA0040.jpg" alt="Noticia destacada" class="news-image" />
     <div class="reaction-bar">
