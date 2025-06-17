@@ -276,7 +276,7 @@
     } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
     // — Tu configuración Firebase (REEMPLAZA con la tuya) —
-    const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
   authDomain: "noticias-interactivas.firebaseapp.com",
   projectId: "noticias-interactivas",
@@ -305,8 +305,9 @@
     }
 
     // Autenticación
-    window.login = () => signInWithPopup(auth, provider);
-    window.logout = () => signOut(auth);
+    window.login = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    window.logout = () => auth.signOut();
+
 
     onAuthStateChanged(auth, u => {
       user = u;
@@ -403,6 +404,7 @@
 <body>
   <header>Noticias Interactivas</header>
   <button id="authBtn" onclick="user ? logout() : login()">Iniciar sesión con Google</button>
+  
 
   <div class="news-container">
     <img src="IMG-20250509-WA0040.jpg" alt="Futbolista en acción" class="news-image" />
