@@ -160,7 +160,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, onSnapshot, doc, setDoc, getDoc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
@@ -190,7 +190,6 @@
       const current = snap.exists() ? snap.data().type : null;
       const newType = current === type ? null : type;
       await setDoc(ref, { type: newType, uid: currentUser.uid });
-      renderReactions();
     }
 
     async function renderReactions() {
@@ -232,7 +231,7 @@
       const txt = input.value.trim();
       if (!txt || !currentUser) return;
       await addDoc(collection(db, "comentarios"), {
-        user: currentUser.displayName,
+        user: currentUser.displayName || "Anónimo",
         uid: currentUser.uid,
         text: txt,
         timestamp: serverTimestamp()
@@ -256,7 +255,10 @@
       renderReactions();
     });
 
-    window.toggleReaction = toggleReaction;
+    window.toggleReaction = async (type) => {
+      await toggleReaction(type);
+      await renderReactions();
+    };
     window.addComment = addComment;
 
     window.onload = () => {
@@ -284,8 +286,9 @@
     </section>
   </div>
   <div class="float-button" onclick="window.location.href='index.html'">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-      <path d="M541 229.16l-61-52.45V56a8 8 0 0 0-8-8h-48a8 8 0 0 0-8 8v72.61L314.41 43.06a35.35 35.35 0 0 0-46.86 0L35 229.16a8 8 0 0 0-1 11.31l21.41 24.51a8 8 0 0 0 11.31 1L96 241.36V456a24 24 0 0 0 24 24h112a8 8 0 0 0 8-8V344h96v128a8 8 aummet371"/>
+    <!-- SVG corregido para que no rompa -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="#004a99" width="32" height="32">
+      <path d="M573.3 229.2L314.7 9c-9.1-7.1-22.6-7.1-31.7 0L2.7 229.2c-7.5 5.9-8.5 17.6-2.1 25.3l21.4 28.1c6.4 8.4 18.2 9.5 25.7 2.2L256 101.9v342.3c0 11 9 20 20 20h24c11 0 20-9 20-20V101.9l208.3 183c7.5 6.6 19.3 5.5 25.7-2.2l21.4-28.1c6.4-7.7 5.4-19.4-2.1-25.4z"/>
     </svg>
   </div>
 </body>
