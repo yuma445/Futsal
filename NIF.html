@@ -63,8 +63,7 @@
       background: #1c1c24;
       border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0, 255, 247, 0.15),
-                  inset 0 0 10px rgba(0, 255, 247, 0.05);
+      box-shadow: 0 2px 10px rgba(0, 255, 247, 0.15), inset 0 0 10px rgba(0, 255, 247, 0.05);
       display: flex; flex-direction: column;
     }
     .news-image {
@@ -87,9 +86,7 @@
       width: 46px; height: 46px;
       display: flex; align-items: center; justify-content: center;
       position: relative;
-      transition: background-color 0.35s ease,
-                  color 0.35s ease,
-                  transform 0.2s ease;
+      transition: background-color 0.35s ease, color 0.35s ease, transform 0.2s ease;
       filter: drop-shadow(0 0 2px #00fff7);
     }
     .reaction-bar button span.count {
@@ -151,18 +148,37 @@
       background-color: #00d7cc;
     }
     .comment {
-      border-top: 1px solid #333; padding: 0.45rem 0;
+      background-color: #2b2b38;
+      border-radius: 14px;
+      padding: 1rem 1.2rem 0.8rem 1.2rem;
+      margin-bottom: 0.8rem;
+      color: #e6faff;
+      position: relative;
+      max-width: 90%;
+      box-shadow: 0 0 6px rgba(0, 255, 255, 0.25);
+      word-wrap: break-word;
     }
-    .comment strong { color: #00fff7; }
+    .comment .user-name {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-size: 0.65rem;
+      font-weight: bold;
+      color: #00ffff;
+      opacity: 0.9;
+    }
+    .comment .comment-text {
+      margin-top: 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
   </style>
 
-  <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, query, orderBy, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Tus credenciales Firebase:
     const firebaseConfig = {
       apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
       authDomain: "noticias-interactivas.firebaseapp.com",
@@ -178,14 +194,12 @@
     const provider = new GoogleAuthProvider();
     let currentUser = null;
 
-    // Sanitiza texto para evitar XSS
     function sanitize(text) {
       const div = document.createElement("div");
       div.textContent = text;
       return div.innerHTML;
     }
 
-    // Cambiar reacción (like, dislike, love)
     async function toggleReaction(type) {
       if (!currentUser) return;
       const ref = doc(db, "reacciones", currentUser.uid);
@@ -195,7 +209,6 @@
       await setDoc(ref, { type: newType, uid: currentUser.uid });
     }
 
-    // Renderizar contadores y estados de botón reacción
     async function renderReactions() {
       const snap = await getDocs(collection(db, "reacciones"));
       const totals = { like: 0, dislike: 0, love: 0 };
@@ -214,7 +227,6 @@
       });
     }
 
-    // Renderizar comentarios en tiempo real
     function renderComments() {
       const q = query(collection(db, "comentarios"), orderBy("timestamp"));
       onSnapshot(q, snap => {
@@ -224,14 +236,16 @@
           const c = doc.data();
           const div = document.createElement("div");
           div.className = "comment";
-          div.innerHTML = `<strong>${sanitize(c.user)}:</strong> ${sanitize(c.text)}`;
+          div.innerHTML = `
+            <div class="user-name">${sanitize(c.user)}</div>
+            <div class="comment-text">${sanitize(c.text)}</div>
+          `;
           cont.appendChild(div);
         });
         cont.scrollTop = cont.scrollHeight;
       });
     }
 
-    // Añadir nuevo comentario
     async function addComment() {
       const input = document.getElementById("commentInput");
       const txt = input.value.trim();
@@ -245,7 +259,6 @@
       input.value = "";
     }
 
-    // Botón iniciar/cerrar sesión
     document.getElementById("authBtn").onclick = () => {
       if (currentUser) {
         signOut(auth);
@@ -254,7 +267,6 @@
       }
     };
 
-    // Detectar cambios en estado de autenticación
     onAuthStateChanged(auth, user => {
       currentUser = user;
       document.getElementById("authBtn").textContent = user ? `Cerrar sesión (${user.displayName})` : "Iniciar sesión con Google";
@@ -263,7 +275,6 @@
       renderReactions();
     });
 
-    // Exponer funciones para el HTML
     window.toggleReaction = async (type) => {
       await toggleReaction(type);
       await renderReactions();
