@@ -5,24 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Noticias Interactivas</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* --- Estilos originales (copia tu CSS tal cual para mantener la estética) --- */
+
   body {
-    font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, #121217, #1f1f28);
     color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
   }
+
   header {
     background: linear-gradient(135deg, #004a99, #0066cc);
     border: 1.8px solid #005bb5;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 91, 181, 0.6);
-    max-width: 700px; width: 100%;
+    max-width: 700px;
+    width: 100%;
     margin-bottom: 1.5rem;
     padding: 1rem 0;
     text-align: center;
@@ -30,39 +33,58 @@
     font-size: 1.7rem;
     color: #fff;
   }
+
   button#authBtn {
     margin-bottom: 1rem;
-    background: #00fff7; border: none; border-radius: 10px;
+    background: #00fff7;
+    border: none;
+    border-radius: 10px;
     padding: 0.7rem 1.5rem;
-    font-weight: 700; color: #121217;
-    cursor: pointer; box-shadow: 0 0 10px #00fff7aa;
+    font-weight: 700;
+    color: #121217;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00fff7aa;
     transition: background-color 0.3s ease;
   }
-  button#authBtn:hover { background-color: #00d7cc; }
+
+  button#authBtn:hover {
+    background-color: #00d7cc;
+  }
 
   .news-container {
-    max-width: 700px; width: 100%;
+    max-width: 700px;
+    width: 100%;
     background: #1c1c24;
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 255, 247, 0.15), inset 0 0 10px rgba(0, 255, 247, 0.05);
     margin-bottom: 2rem;
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
+
   .news-image {
     width: 100%;
     border-bottom: 3px solid #00fff7;
     border-radius: 14px 14px 0 0;
     object-fit: cover;
     max-height: 350px;
+    transition: filter 0.3s ease;
   }
+
+  .news-image:hover {
+    filter: brightness(1.1);
+  }
+
   .reaction-bar {
-    display: flex; justify-content: start;
+    display: flex;
+    justify-content: start;
     gap: 12px;
     background: #22222b;
     border-top: 1.5px solid #00fff7;
     padding: 0.8rem 1rem;
   }
+
   .reaction-bar button {
     background: rgba(0, 255, 247, 0.1);
     border: 1.8px solid #00fff7;
@@ -81,209 +103,188 @@
     filter: drop-shadow(0 0 2px #00fff7);
     user-select: none;
   }
+
   .reaction-bar button span.count {
     font-size: 0.8rem;
     font-weight: 600;
     color: #80ffff;
     user-select: none;
   }
+
   .reaction-bar button:hover {
     background-color: #00fff7;
     color: #121217;
     filter: drop-shadow(0 0 6px #00fff7);
     transform: scale(1.1);
   }
+
   .reaction-bar button.active {
     background-color: #00fff7;
     color: #121217;
     filter: drop-shadow(0 0 10px #00fff7);
     transform: scale(1.15);
   }
+
   .reaction-bar button.heart {
     border-color: #ff4d88;
     color: #ff4d88;
     background: rgba(255, 77, 136, 0.12);
     filter: drop-shadow(0 0 3px #ff4d88);
   }
+
   .reaction-bar button.heart:hover {
     background-color: #ff4d88;
     color: #fff;
   }
+
   .reaction-bar button.heart.active {
     background-color: #ff4d88;
     color: #fff;
     filter: drop-shadow(0 0 14px #ff4d88);
   }
 
-  /* Comentarios */
   .comments-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 1.2rem 0.3rem 1.2rem;
+    align-items: center;
+    padding: 0 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
     color: #80ffff;
-    font-size: 0.85rem;
-    font-weight: 600;
-    user-select: none;
-  }
-  .comments-count {
-    font-weight: 700;
-    background: rgba(0, 255, 247, 0.2);
-    padding: 2px 8px;
-    border-radius: 12px;
-    min-width: 28px;
-    text-align: center;
-    box-shadow: 0 0 5px #00fff7;
-  }
-  .comments-filter {
-    display: flex;
-    gap: 10px;
-    font-weight: 400;
-    color: #a0dfff;
-    cursor: pointer;
-  }
-  .comments-filter span {
-    padding: 2px 6px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  .comments-filter span:hover {
-    background-color: #00fff7;
-    color: #121217;
-    box-shadow: 0 0 5px #00fff7;
-  }
-  .comments-filter span.active {
-    background-color: #00fff7;
-    color: #121217;
-    box-shadow: 0 0 8px #00fff7;
-    font-weight: 600;
-  }
-  .comments-section {
-    padding: 0 1.2rem 1rem 1.2rem;
-    font-size: 1rem; color: #cceeff;
-    max-height: 300px;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-  }
-  .comment-input {
-    display: flex; gap: 0.6rem; margin: 1rem 1.2rem 0 1.2rem;
-  }
-  .comment-input input {
-    flex-grow: 1;
-    padding: 0.6rem 1rem;
-    border-radius: 10px;
-    border: 1.5px solid #00fff7;
-    background: #121217;
-    color: #e0f7ff;
-    font-size: 1rem;
-  }
-  .comment-input input:disabled {
-    background: #333; color: #777; cursor: not-allowed;
-  }
-  .comment-input button {
-    background: #00fff7; border: none; border-radius: 10px;
-    padding: 0 1.3rem; font-weight: 700; color: #121217;
-    cursor: pointer; font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  .comment-input button:disabled {
-    background: #004d53; cursor: not-allowed;
-  }
-  .comment-input button:hover:not(:disabled) {
-    background-color: #00d7cc;
-  }
-  .comment {
-    background-color: #24252d;
-    border-radius: 14px;
-    padding: 0.9rem 1rem 2.6rem 1rem; /* espacio extra abajo para reacciones */
-    margin-bottom: 0.9rem;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    color: #f0faff;
-  }
-  .comment .user-name {
-    position: absolute;
-    top: 6px;
-    left: 12px;
-    font-size: 0.65rem;
-    font-weight: bold;
-    color: #00ccff;
-    opacity: 0.9;
-    user-select: none;
-  }
-  .comment .comment-text {
-    margin-top: 1.6rem;
-    line-height: 1.45;
-    font-size: 0.95rem;
-    white-space: pre-wrap;
-    word-wrap: break-word;
   }
 
-  /* REACCIONES EN COMENTARIOS - MÁS PEQUEÑAS y esquina inferior derecha */
+  .comments-filter span {
+    cursor: pointer;
+    margin-left: 8px;
+    padding: 0 5px;
+    user-select: none;
+  }
+
+  .comments-filter span.active {
+    font-weight: 700;
+    color: #00fff7;
+    border-bottom: 2px solid #00fff7;
+  }
+
+  .comments-section {
+    background: #121217;
+    border-radius: 0 0 14px 14px;
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .comment-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .comment-input input {
+    flex-grow: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    border: 1.5px solid #00fff7;
+    background: #1c1c24;
+    color: #eee;
+    font-size: 1rem;
+  }
+
+  .comment-input input:disabled {
+    background: #333;
+    cursor: not-allowed;
+  }
+
+  .comment-input button {
+    padding: 0 1rem;
+    border-radius: 12px;
+    background: #00fff7;
+    border: none;
+    color: #121217;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .comment-input button:disabled {
+    background: #00575f;
+    cursor: not-allowed;
+  }
+
+  .comments-list {
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  .comment {
+    background: #1c1c24;
+    border-radius: 12px;
+    margin-bottom: 0.7rem;
+    padding: 0.7rem 1rem;
+    color: #eee;
+    position: relative;
+  }
+
+  .comment .user-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #00fff7;
+    margin-bottom: 0.2rem;
+  }
+
+  .comment .comment-text {
+    font-size: 0.95rem;
+  }
+
   .comment-reactions {
-    position: absolute;
-    bottom: 8px;
-    right: 12px;
     display: flex;
     gap: 8px;
+    margin-top: 0.3rem;
   }
+
   .comment-reactions button {
-    background: rgba(0, 255, 247, 0.12);
-    border: 1.4px solid #00fff7;
-    border-radius: 5px;
+    background: rgba(0, 255, 247, 0.1);
+    border: 1.5px solid #00fff7;
+    border-radius: 10px;
     color: #00fff7;
-    font-size: 0.75rem;
     cursor: pointer;
-    height: 26px;
-    min-width: 38px;
-    padding: 0 6px;
+    font-size: 0.9rem;
+    padding: 2px 8px;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    filter: drop-shadow(0 0 1.5px #00fff7);
     user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
+
   .comment-reactions button span.count {
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: #80ffff;
-    user-select: none;
+    font-size: 0.8rem;
   }
+
   .comment-reactions button:hover {
     background-color: #00fff7;
     color: #121217;
-    filter: drop-shadow(0 0 5px #00fff7);
-    transform: scale(1.1);
   }
+
   .comment-reactions button.active {
     background-color: #00fff7;
     color: #121217;
-    filter: drop-shadow(0 0 8px #00fff7);
-    transform: scale(1.15);
   }
+
   .comment-reactions button.heart {
     border-color: #ff4d88;
     color: #ff4d88;
-    background: rgba(255, 77, 136, 0.15);
-    filter: drop-shadow(0 0 2px #ff4d88);
+    background: rgba(255, 77, 136, 0.12);
   }
+
   .comment-reactions button.heart:hover {
     background-color: #ff4d88;
     color: #fff;
   }
+
   .comment-reactions button.heart.active {
     background-color: #ff4d88;
     color: #fff;
-    filter: drop-shadow(0 0 10px #ff4d88);
-  }
-
-  /* Responsivo */
-  @media (max-width: 768px) {
-    .news-container {
-      max-width: 100%;
-    }
   }
 </style>
 </head>
@@ -306,9 +307,7 @@ import {
   getDoc,
   query,
   orderBy,
-  serverTimestamp,
-  getDocs,
-  deleteDoc
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -332,36 +331,28 @@ function sanitize(text) {
   return div.innerHTML;
 }
 
-let newsData = [];
+// Aquí defines las noticias con id único y la ruta de imagen local que tú quieres
+const newsData = [
+  {
+    id: "noticia1",
+    title: "Nueva vacuna contra la gripe alcanza 90% de efectividad",
+    imageURL: "imagenes/Noticia 1.jpg" // Cambia esta ruta según tu imagen local
+  },
+  {
+    id: "noticia2",
+    title: "Descubren exoplaneta con posibilidad de vida",
+    imageURL: "imagenes/Noticia 2.jpg"
+  },
+  {
+    id: "noticia3",
+    title: "Tendencias en tecnología para 2025: Lo que debes saber",
+    imageURL: "imagenes/Noticia 3.jpg"
+  }
+];
+
+// Para guardar comentarios localmente antes de renderizar
 let commentsDataByNews = {};
 
-// --- Añadir noticias ejemplo si no existen ---
-async function ensureExampleNews() {
-  const newsCol = collection(db, "noticias");
-  const snapshot = await getDocs(newsCol);
-  if (!snapshot.empty) return; // Ya hay noticias, no insertar
-
-  const examples = [
-    {
-      title: "Nueva vacuna contra la gripe alcanza 90% de efectividad",
-      imageURL: "https://images.unsplash.com/photo-1586772001496-13db85a5b0e8?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-      title: "Descubren exoplaneta con posibilidad de vida",
-      imageURL: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=700&q=80"
-    },
-    {
-      title: "Tendencias en tecnología para 2025: Lo que debes saber",
-      imageURL: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=700&q=80"
-    }
-  ];
-
-  for (const news of examples) {
-    await addDoc(newsCol, news);
-  }
-}
-
-// Renderizar todas las noticias
 function renderNews() {
   const container = document.getElementById("newsList");
   container.innerHTML = "";
@@ -372,7 +363,7 @@ function renderNews() {
     newsDiv.dataset.newsId = news.id;
 
     newsDiv.innerHTML = `
-      <img src="${sanitize(news.imageURL)}" alt="Imagen noticia" class="news-image" />
+      <img src="${sanitize(news.imageURL)}" alt="${sanitize(news.title)}" class="news-image" />
       <div class="reaction-bar" data-news-id="${news.id}">
         <button data-type="like">👍 <span class="count">0</span></button>
         <button data-type="dislike">👎 <span class="count">0</span></button>
@@ -399,7 +390,7 @@ function renderNews() {
 
     container.appendChild(newsDiv);
 
-    // Eventos filtros comentarios
+    // Eventos filtro, input y botón enviar
     const filterDiv = newsDiv.querySelector(".comments-filter");
     const input = newsDiv.querySelector("input");
     const sendBtn = newsDiv.querySelector("button");
@@ -424,10 +415,13 @@ function renderNews() {
     newsDiv.currentFilter = () => currentFilter;
     newsDiv.input = input;
     newsDiv.sendBtn = sendBtn;
+
+    // Escuchar reacciones y comentarios para cada noticia
+    listenReactionsForNews(news.id);
+    listenToComments(news.id);
   });
 }
 
-// Renderizar comentarios por noticia y filtro
 function renderCommentsForNews(newsId, filter = "recent") {
   const commentsContainer = document.querySelector(`.comments-list[data-news-id="${newsId}"]`);
   const commentsCountElem = document.querySelector(`.comments-count[data-news-id="${newsId}"]`);
@@ -436,8 +430,9 @@ function renderCommentsForNews(newsId, filter = "recent") {
   let comments = [...commentsDataByNews[newsId]];
 
   if (filter === "recent") {
-    comments.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
+    comments.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
   } else if (filter === "top") {
+    // Puedes implementar un campo likes en comentarios para ordenar
     comments.sort((a, b) => (b.likes || 0) - (a.likes || 0));
   }
 
@@ -453,34 +448,18 @@ function renderCommentsForNews(newsId, filter = "recent") {
       <div class="user-name">${sanitize(comment.user)}</div>
       <div class="comment-text">${sanitize(comment.text)}</div>
       <div class="comment-reactions" data-comment-id="${comment.id}">
-        <button data-type="like">👍 <span class="count">0</span></button>
-        <button data-type="dislike">👎 <span class="count">0</span></button>
-        <button class="heart" data-type="love">❤ <span class="count">0</span></button>
+        <button data-type="like">👍 <span class="count">${comment.likes || 0}</span></button>
+        <button data-type="dislike">👎 <span class="count">${comment.dislikes || 0}</span></button>
+        <button class="heart" data-type="love">❤ <span class="count">${comment.loves || 0}</span></button>
       </div>
     `;
     commentsContainer.appendChild(commentDiv);
-  });
 
-  // Cargar reacciones para comentarios mostrados
-  loadReactionsForComments(newsId);
-}
-
-// Escuchar noticias desde Firestore
-async function listenToNews() {
-  await ensureExampleNews();
-  const newsCol = collection(db, "noticias");
-  onSnapshot(newsCol, snapshot => {
-    newsData = [];
-    snapshot.forEach(docSnap => {
-      newsData.push({ id: docSnap.id, ...docSnap.data() });
-    });
-    renderNews();
-    newsData.forEach(news => listenToComments(news.id));
-    newsData.forEach(news => listenReactionsForNews(news.id));
+    // Agregar eventos reacciones a comentarios aquí si quieres (opcional)
   });
 }
 
-// Escuchar comentarios por noticia
+// Escuchar comentarios en Firestore
 function listenToComments(newsId) {
   const commentsCol = collection(db, "comentarios");
   const q = query(commentsCol, orderBy("timestamp", "desc"));
@@ -498,7 +477,7 @@ function listenToComments(newsId) {
   });
 }
 
-// Escuchar reacciones generales para noticia
+// Escuchar reacciones a la noticia
 function listenReactionsForNews(newsId) {
   const reactionsCol = collection(db, "noticias", newsId, "reacciones");
   onSnapshot(reactionsCol, snapshot => {
@@ -511,105 +490,73 @@ function listenReactionsForNews(newsId) {
     if (!reactionBar) return;
     reactionBar.querySelectorAll("button").forEach(btn => {
       const type = btn.dataset.type;
-      btn.querySelector(".count").textContent = counts[type] || 0;
+      btn.querySelector("span.count").textContent = counts[type] || 0;
     });
   });
 }
 
-// Cargar reacciones para comentarios de una noticia
-function loadReactionsForComments(newsId) {
-  const comments = commentsDataByNews[newsId] || [];
-  comments.forEach(async comment => {
-    const reactionDiv = document.querySelector(`.comment-reactions[data-comment-id="${comment.id}"]`);
-    if (!reactionDiv) return;
-
-    const reactionsCol = collection(db, "comentarios", comment.id, "reacciones");
-    onSnapshot(reactionsCol, snapshot => {
-      const counts = { like: 0, dislike: 0, love: 0 };
-      let userReactionType = null;
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        if (data.type && counts[data.type] !== undefined) counts[data.type]++;
-        if (docSnap.id === (currentUser && currentUser.uid)) userReactionType = data.type;
-      });
-
-      reactionDiv.querySelectorAll("button").forEach(btn => {
-        const type = btn.dataset.type;
-        btn.querySelector(".count").textContent = counts[type] || 0;
-        btn.classList.toggle("active", userReactionType === type);
-      });
-    });
-
-    // Eventos click para reaccionar
-    reactionDiv.querySelectorAll("button").forEach(btn => {
-      btn.onclick = async () => {
-        if (!currentUser) return alert("Debes iniciar sesión para reaccionar");
-        const type = btn.dataset.type;
-        const userReactionRef = doc(db, "comentarios", comment.id, "reacciones", currentUser.uid);
-        const userReactionSnap = await getDoc(userReactionRef);
-        const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().type : null;
-
-        if (currentReaction === type) {
-          await deleteDoc(userReactionRef);
-        } else {
-          await setDoc(userReactionRef, { type: type, uid: currentUser.uid });
-        }
-      };
-    });
-  });
-}
-
-// Añadir comentario a noticia específica
+// Función para enviar comentario a Firestore
 async function sendComment(newsId) {
   const newsDiv = document.querySelector(`.news-container[data-news-id="${newsId}"]`);
-  const input = newsDiv?.input;
-  const sendBtn = newsDiv?.sendBtn;
-  if (!input || !sendBtn) return;
+  if (!newsDiv) return;
+  const input = newsDiv.querySelector("input");
+  const sendBtn = newsDiv.querySelector("button");
 
   const text = input.value.trim();
-  if (!text) return;
-  if (!currentUser) return alert("Debes iniciar sesión para comentar");
+  if (!text || !currentUser) return;
 
   sendBtn.disabled = true;
+  input.disabled = true;
+
   try {
     await addDoc(collection(db, "comentarios"), {
       newsId: newsId,
+      text: text,
       user: currentUser.displayName || "Anónimo",
       uid: currentUser.uid,
-      text: text,
-      likes: 0,
       timestamp: serverTimestamp()
     });
     input.value = "";
   } catch (e) {
-    alert("Error al enviar comentario.");
-    console.error(e);
-  } finally {
-    sendBtn.disabled = false;
+    console.error("Error enviando comentario:", e);
   }
+
+  sendBtn.disabled = false;
+  input.disabled = false;
+  input.focus();
 }
 
-// Manejo autenticación Google
-document.getElementById("authBtn").addEventListener("click", () => {
-  if (currentUser) {
-    signOut(auth);
+// Manejo de login/logout
+const authBtn = document.getElementById("authBtn");
+
+authBtn.addEventListener("click", () => {
+  if (!currentUser) {
+    signInWithPopup(auth, provider).catch(console.error);
   } else {
-    signInWithPopup(auth, provider);
+    signOut(auth).catch(console.error);
   }
 });
 
 onAuthStateChanged(auth, user => {
   currentUser = user;
-  document.getElementById("authBtn").textContent = user ? `Cerrar sesión (${user.displayName})` : "Iniciar sesión con Google";
-  document.querySelectorAll(".comment-input input").forEach(input => {
+  if (user) {
+    authBtn.textContent = `Cerrar sesión (${user.displayName || user.email})`;
+  } else {
+    authBtn.textContent = "Iniciar sesión con Google";
+  }
+  // Activar inputs de comentarios solo si usuario está logueado
+  newsData.forEach(news => {
+    const newsDiv = document.querySelector(`.news-container[data-news-id="${news.id}"]`);
+    if (!newsDiv) return;
+    const input = newsDiv.querySelector("input");
+    const sendBtn = newsDiv.querySelector("button");
     input.disabled = !user;
-  });
-  document.querySelectorAll(".comment-input button").forEach(btn => {
-    btn.disabled = !user;
+    sendBtn.disabled = !user;
   });
 });
 
-listenToNews();
+renderNews();
+
 </script>
 </body>
 </html>
