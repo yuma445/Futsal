@@ -1,308 +1,615 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Noticias Interactivas</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #121217, #1f1f28);
-      color: #eee;
-      padding: 1rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      background: linear-gradient(135deg, #004a99, #0066cc);
-      border: 1.8px solid #005bb5;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 91, 181, 0.6);
-      max-width: 600px; width: 100%;
-      margin-bottom: 1.5rem;
-      padding: 1rem 0;
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.7rem;
-      color: #fff;
-    }
-    .float-button {
-      position: fixed; top: 20px; right: 20px;
-      width: 55px; height: 55px; border-radius: 50%;
-      background-color: rgb(248, 246, 246);
-      display: flex; justify-content: center; align-items: center;
-      cursor: pointer; z-index: 1001;
-    }
-    .float-button::before {
-      content: "";
-      position: absolute; width: 70px; height: 70px;
-      border-radius: 50%; border: 2px dashed rgb(245, 243, 243);
-      animation: spin 4s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }
-    }
-    .float-button svg {
-      width: 32px; height: 32px; fill: #004a99; z-index: 1002;
-    }
-    #authBtn {
-      margin-bottom: 1rem;
-      background: #00fff7; border: none; border-radius: 10px;
-      padding: 0.7rem 1.5rem;
-      font-weight: 700; color: #121217;
-      cursor: pointer; box-shadow: 0 0 10px #00fff7aa;
-      transition: background-color 0.3s ease;
-    }
-    #authBtn:hover { background-color: #00d7cc; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Noticias Interactivas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #121217, #1f1f28);
+    color: #eee;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #004a99, #0066cc);
+    border: 1.8px solid #005bb5;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 91, 181, 0.6);
+    max-width: 700px; width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: #fff;
+  }
+  button#authBtn {
+    margin-bottom: 1rem;
+    background: #00fff7; border: none; border-radius: 10px;
+    padding: 0.7rem 1.5rem;
+    font-weight: 700; color: #121217;
+    cursor: pointer; box-shadow: 0 0 10px #00fff7aa;
+    transition: background-color 0.3s ease;
+  }
+  button#authBtn:hover { background-color: #00d7cc; }
+
+  .news-container {
+    max-width: 700px; width: 100%;
+    background: #1c1c24;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 255, 247, 0.15), inset 0 0 10px rgba(0, 255, 247, 0.05);
+    margin-bottom: 2rem;
+    display: flex; flex-direction: column;
+  }
+  .news-image {
+    width: 100%;
+    border-bottom: 3px solid #00fff7;
+    border-radius: 14px 14px 0 0;
+    object-fit: cover;
+    max-height: 350px;
+  }
+  .reaction-bar {
+    display: flex; justify-content: start;
+    gap: 12px;
+    background: #22222b;
+    border-top: 1.5px solid #00fff7;
+    padding: 0.8rem 1rem;
+  }
+  .reaction-bar button {
+    background: rgba(0, 255, 247, 0.1);
+    border: 1.8px solid #00fff7;
+    border-radius: 6px;
+    color: #00fff7;
+    font-size: 1rem;
+    cursor: pointer;
+    height: 36px;
+    min-width: 56px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    filter: drop-shadow(0 0 2px #00fff7);
+    user-select: none;
+  }
+  .reaction-bar button span.count {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #80ffff;
+    user-select: none;
+  }
+  .reaction-bar button:hover {
+    background-color: #00fff7;
+    color: #121217;
+    filter: drop-shadow(0 0 6px #00fff7);
+    transform: scale(1.1);
+  }
+  .reaction-bar button.active {
+    background-color: #00fff7;
+    color: #121217;
+    filter: drop-shadow(0 0 10px #00fff7);
+    transform: scale(1.15);
+  }
+  .reaction-bar button.heart {
+    border-color: #ff4d88;
+    color: #ff4d88;
+    background: rgba(255, 77, 136, 0.12);
+    filter: drop-shadow(0 0 3px #ff4d88);
+  }
+  .reaction-bar button.heart:hover {
+    background-color: #ff4d88;
+    color: #fff;
+  }
+  .reaction-bar button.heart.active {
+    background-color: #ff4d88;
+    color: #fff;
+    filter: drop-shadow(0 0 14px #ff4d88);
+  }
+
+  /* Comentarios */
+  .comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.2rem 0.3rem 1.2rem;
+    color: #80ffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    user-select: none;
+  }
+  .comments-count {
+    font-weight: 700;
+    background: rgba(0, 255, 247, 0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+    min-width: 28px;
+    text-align: center;
+    box-shadow: 0 0 5px #00fff7;
+  }
+  .comments-filter {
+    display: flex;
+    gap: 10px;
+    font-weight: 400;
+    color: #a0dfff;
+    cursor: pointer;
+  }
+  .comments-filter span {
+    padding: 2px 6px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .comments-filter span:hover {
+    background-color: #00fff7;
+    color: #121217;
+    box-shadow: 0 0 5px #00fff7;
+  }
+  .comments-filter span.active {
+    background-color: #00fff7;
+    color: #121217;
+    box-shadow: 0 0 8px #00fff7;
+    font-weight: 600;
+  }
+  .comments-section {
+    padding: 0 1.2rem 1rem 1.2rem;
+    font-size: 1rem; color: #cceeff;
+    max-height: 300px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  .comment-input {
+    display: flex; gap: 0.6rem; margin: 1rem 1.2rem 0 1.2rem;
+  }
+  .comment-input input {
+    flex-grow: 1;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #00fff7;
+    background: #121217;
+    color: #e0f7ff;
+    font-size: 1rem;
+  }
+  .comment-input input:disabled {
+    background: #333; color: #777; cursor: not-allowed;
+  }
+  .comment-input button {
+    background: #00fff7; border: none; border-radius: 10px;
+    padding: 0 1.3rem; font-weight: 700; color: #121217;
+    cursor: pointer; font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  .comment-input button:disabled {
+    background: #004d53; cursor: not-allowed;
+  }
+  .comment-input button:hover:not(:disabled) {
+    background-color: #00d7cc;
+  }
+  .comment {
+    background-color: #24252d;
+    border-radius: 14px;
+    padding: 0.9rem 1rem 2.6rem 1rem; /* espacio extra abajo para reacciones */
+    margin-bottom: 0.9rem;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    color: #f0faff;
+  }
+  .comment .user-name {
+    position: absolute;
+    top: 6px;
+    left: 12px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    color: #00ccff;
+    opacity: 0.9;
+    user-select: none;
+  }
+  .comment .comment-text {
+    margin-top: 1.6rem;
+    line-height: 1.45;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* REACCIONES EN COMENTARIOS - MÁS PEQUEÑAS y esquina inferior derecha */
+  .comment-reactions {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+  }
+  .comment-reactions button {
+    background: rgba(0, 255, 247, 0.12);
+    border: 1.4px solid #00fff7;
+    border-radius: 5px;
+    color: #00fff7;
+    font-size: 0.75rem;
+    cursor: pointer;
+    height: 26px;
+    min-width: 38px;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    filter: drop-shadow(0 0 1.5px #00fff7);
+    user-select: none;
+  }
+  .comment-reactions button span.count {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #80ffff;
+    user-select: none;
+  }
+  .comment-reactions button:hover {
+    background-color: #00fff7;
+    color: #121217;
+    filter: drop-shadow(0 0 5px #00fff7);
+    transform: scale(1.1);
+  }
+  .comment-reactions button.active {
+    background-color: #00fff7;
+    color: #121217;
+    filter: drop-shadow(0 0 8px #00fff7);
+    transform: scale(1.15);
+  }
+  .comment-reactions button.heart {
+    border-color: #ff4d88;
+    color: #ff4d88;
+    background: rgba(255, 77, 136, 0.15);
+    filter: drop-shadow(0 0 2px #ff4d88);
+  }
+  .comment-reactions button.heart:hover {
+    background-color: #ff4d88;
+    color: #fff;
+  }
+  .comment-reactions button.heart.active {
+    background-color: #ff4d88;
+    color: #fff;
+    filter: drop-shadow(0 0 10px #ff4d88);
+  }
+
+  /* Responsivo */
+  @media (max-width: 768px) {
     .news-container {
-      max-width: 600px; width: 100%;
-      background: #1c1c24;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0, 255, 247, 0.15), inset 0 0 10px rgba(0, 255, 247, 0.05);
-      display: flex; flex-direction: column;
+      max-width: 100%;
     }
-    .news-image {
-      width: 100%;
-      border-bottom: 3px solid #00fff7;
-      border-radius: 14px 14px 0 0;
-      object-fit: cover;
-      max-height: 350px;
-    }
-    .reaction-bar {
-      display: flex; justify-content: space-around;
-      background: #22222b;
-      border-top: 1.5px solid #00fff7;
-      padding: 0.8rem 0;
-    }
-    .reaction-bar button {
-      background: transparent; border: 2px solid #00fff7;
-      border-radius: 50%; color: #00fff7;
-      font-size: 1.4rem; cursor: pointer;
-      width: 46px; height: 46px;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-      transition: background-color 0.35s ease, color 0.35s ease, transform 0.2s ease;
-      filter: drop-shadow(0 0 2px #00fff7);
-    }
-    .reaction-bar button span.count {
-      position: absolute; bottom: -1.4rem;
-      font-size: 0.75rem; color: #80ffff; font-weight: 600;
-    }
-    .reaction-bar button:hover {
-      transform: scale(1.1);
-      background-color: #00fff7; color: #121217;
-      filter: drop-shadow(0 0 5px #00fff7);
-    }
-    .reaction-bar button.active {
-      background-color: #00fff7; color: #121217;
-      filter: drop-shadow(0 0 8px #00fff7);
-      transform: scale(1.15);
-    }
-    .reaction-bar button.heart {
-      border-color: #ff4d88; color: #ff4d88;
-      filter: drop-shadow(0 0 3px #ff4d88);
-    }
-    .reaction-bar button.heart:hover {
-      background-color: #ff4d88; color: #fff;
-    }
-    .reaction-bar button.heart.active {
-      background-color: #ff4d88; color: #fff;
-      filter: drop-shadow(0 0 12px #ff4d88);
-    }
-    .comments-section {
-      padding: 1rem 1.2rem;
-      font-size: 1rem; color: #cceeff;
-      overflow-y: auto; max-height: 320px;
-      scroll-behavior: smooth;
-    }
-    .comment-input {
-      display: flex; gap: 0.6rem; margin-bottom: 1rem;
-    }
-    .comment-input input {
-      flex-grow: 1;
-      padding: 0.6rem 1rem;
-      border-radius: 10px;
-      border: 1.5px solid #00fff7;
-      background: #121217;
-      color: #e0f7ff;
-      font-size: 1rem;
-    }
-    .comment-input input:disabled {
-      background: #333; color: #777; cursor: not-allowed;
-    }
-    .comment-input button {
-      background: #00fff7; border: none; border-radius: 10px;
-      padding: 0 1.3rem; font-weight: 700; color: #121217;
-      cursor: pointer; font-size: 1rem;
-      transition: background-color 0.3s ease;
-    }
-    .comment-input button:disabled {
-      background: #004d53; cursor: not-allowed;
-    }
-    .comment-input button:hover:not(:disabled) {
-      background-color: #00d7cc;
-    }
-    .comment {
-      background-color: #24252d;
-      border-radius: 16px;
-      padding: 0.8rem 1rem;
-      margin-bottom: 0.9rem;
-      position: relative;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-      color: #f0faff;
-    }
-    .comment .user-name {
-      position: absolute;
-      top: 6px;
-      left: 10px;
-      font-size: 0.65rem;
-      font-weight: bold;
-      color: #00ccff;
-      opacity: 0.9;
-    }
-    .comment .comment-text {
-      margin-top: 1.4rem;
-      line-height: 1.4;
-      font-size: 0.95rem;
-    }
-  </style>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, query, orderBy, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
-      authDomain: "noticias-interactivas.firebaseapp.com",
-      projectId: "noticias-interactivas",
-      storageBucket: "noticias-interactivas.appspot.com",
-      messagingSenderId: "859594674987",
-      appId: "1:859594674987:web:7f785faac0d67fd0e5ab6e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-    let currentUser = null;
-
-    function sanitize(text) {
-      const div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    async function toggleReaction(type) {
-      if (!currentUser) return;
-      const ref = doc(db, "reacciones", currentUser.uid);
-      const snap = await getDoc(ref);
-      const current = snap.exists() ? snap.data().type : null;
-      const newType = current === type ? null : type;
-      await setDoc(ref, { type: newType, uid: currentUser.uid });
-    }
-
-    async function renderReactions() {
-      const snap = await getDocs(collection(db, "reacciones"));
-      const totals = { like: 0, dislike: 0, love: 0 };
-      let userType = null;
-
-      snap.forEach(d => {
-        const r = d.data().type;
-        if (r && totals[r] !== undefined) totals[r]++;
-        if (d.id === (currentUser && currentUser.uid)) userType = r;
-      });
-
-      document.querySelectorAll(".reaction-bar button").forEach(btn => {
-        const type = btn.dataset.type;
-        btn.querySelector(".count").textContent = totals[type] || 0;
-        btn.classList.toggle("active", userType === type);
-      });
-    }
-
-    function renderComments() {
-      const q = query(collection(db, "comentarios"), orderBy("timestamp"));
-      onSnapshot(q, snap => {
-        const cont = document.getElementById("comments");
-        cont.innerHTML = "";
-        snap.forEach(doc => {
-          const c = doc.data();
-          const div = document.createElement("div");
-          div.className = "comment";
-          div.innerHTML = `<div class="user-name">${sanitize(c.user)}</div><div class="comment-text">${sanitize(c.text)}</div>`;
-          cont.appendChild(div);
-        });
-        cont.scrollTop = cont.scrollHeight;
-      });
-    }
-
-    async function addComment() {
-      const input = document.getElementById("commentInput");
-      const txt = input.value.trim();
-      if (!txt || !currentUser) return;
-      await addDoc(collection(db, "comentarios"), {
-        user: currentUser.displayName || "Anónimo",
-        uid: currentUser.uid,
-        text: txt,
-        timestamp: serverTimestamp()
-      });
-      input.value = "";
-    }
-
-    document.getElementById("authBtn").onclick = () => {
-      if (currentUser) {
-        signOut(auth);
-      } else {
-        signInWithPopup(auth, provider);
-      }
-    };
-
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      document.getElementById("authBtn").textContent = user ? `Cerrar sesión (${user.displayName})` : "Iniciar sesión con Google";
-      document.getElementById("commentInput").disabled = !user;
-      document.getElementById("sendBtn").disabled = !user;
-      renderReactions();
-    });
-
-    window.toggleReaction = async (type) => {
-      await toggleReaction(type);
-      await renderReactions();
-    };
-    window.addComment = addComment;
-
-    window.onload = () => {
-      renderComments();
-      renderReactions();
-    };
-  </script>
+  }
+</style>
 </head>
 <body>
-  <header>Noticias Interactivas</header>
-  <button id="authBtn">Iniciar sesión con Google</button>
-  <div class="news-container">
-    <img src="IMG-20250509-WA0040.jpg" alt="Noticia destacada" class="news-image" />
-    <div class="reaction-bar">
-      <button onclick="toggleReaction('like')" data-type="like">👍 <span class="count">0</span></button>
-      <button onclick="toggleReaction('dislike')" data-type="dislike">👎 <span class="count">0</span></button>
-      <button class="heart" onclick="toggleReaction('love')" data-type="love">❤ <span class="count">0</span></button>
-    </div>
-    <section class="comments-section">
-      <div class="comment-input">
-        <input type="text" id="commentInput" placeholder="Escribe un comentario..." disabled onkeydown="if(event.key==='Enter') addComment()">
-        <button id="sendBtn" onclick="addComment()" disabled>Enviar</button>
+<header>NOTICIAS</header>
+<button id="authBtn">Iniciar sesión con Google</button>
+
+<div id="newsList" style="width: 100%; max-width: 700px;"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  doc,
+  setDoc,
+  getDoc,
+  query,
+  orderBy,
+  serverTimestamp,
+  getDocs,
+  deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBD8zIGzLB7YedeWb64TvNQ7JLw4kas688",
+  authDomain: "noticias-interactivas.firebaseapp.com",
+  projectId: "noticias-interactivas",
+  storageBucket: "noticias-interactivas.appspot.com",
+  messagingSenderId: "859594674987",
+  appId: "1:859594674987:web:7f785faac0d67fd0e5ab6e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+let currentUser = null;
+
+function sanitize(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+let newsData = [];
+let commentsDataByNews = {};
+
+// --- Añadir noticias ejemplo si no existen ---
+async function ensureExampleNews() {
+  const newsCol = collection(db, "noticias");
+  const snapshot = await getDocs(newsCol);
+  if (!snapshot.empty) return; // Ya hay noticias, no insertar
+
+  const examples = [
+    {
+      title: "Nueva vacuna contra la gripe alcanza 90% de efectividad",
+      imageURL: "https://images.unsplash.com/photo-1586772001496-13db85a5b0e8?auto=format&fit=crop&w=700&q=80"
+    },
+    {
+      title: "Descubren exoplaneta con posibilidad de vida",
+      imageURL: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=700&q=80"
+    },
+    {
+      title: "Tendencias en tecnología para 2025: Lo que debes saber",
+      imageURL: "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=700&q=80"
+    }
+  ];
+
+  for (const news of examples) {
+    await addDoc(newsCol, news);
+  }
+}
+
+// Renderizar todas las noticias
+function renderNews() {
+  const container = document.getElementById("newsList");
+  container.innerHTML = "";
+
+  newsData.forEach(news => {
+    const newsDiv = document.createElement("div");
+    newsDiv.className = "news-container";
+    newsDiv.dataset.newsId = news.id;
+
+    newsDiv.innerHTML = `
+      <img src="${sanitize(news.imageURL)}" alt="Imagen noticia" class="news-image" />
+      <div class="reaction-bar" data-news-id="${news.id}">
+        <button data-type="like">👍 <span class="count">0</span></button>
+        <button data-type="dislike">👎 <span class="count">0</span></button>
+        <button class="heart" data-type="love">❤ <span class="count">0</span></button>
       </div>
-      <div id="comments"></div>
-    </section>
-  </div>
-  <div class="float-button" onclick="window.location.href='index.html'">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="#004a99" width="32" height="32">
-      <path d="M573.3 229.2L314.7 9c-9.1-7.1-22.6-7.1-31.7 0L2.7 229.2c-7.5 5.9-8.5 17.6-2.1 25.3l21.4 28.1c6.4 8.4 18.2 9.5 25.7 2.2L256 101.9v342.3c0 11 9 20 20 20h24c11 0 20-9 20-20V101.9l208.3 183c7.5 6.6 19.3 5.5 25.7-2.2l21.4-28.1c6.4-7.7 5.4-19.4-2.1-25.4z"/>
-    </svg>
-  </div>
+
+      <div class="comments-header">
+        <div>Comentarios: <span class="comments-count" data-news-id="${news.id}">0</span></div>
+        <div class="comments-filter" data-news-id="${news.id}">
+          <span data-filter="recent" class="active">Más recientes</span>
+          <span data-filter="top">Más destacados</span>
+          <span data-filter="all">Todos</span>
+        </div>
+      </div>
+
+      <section class="comments-section" data-news-id="${news.id}">
+        <div class="comment-input">
+          <input type="text" placeholder="Escribe un comentario..." data-news-id="${news.id}" disabled />
+          <button disabled data-news-id="${news.id}">Enviar</button>
+        </div>
+        <div class="comments-list" data-news-id="${news.id}"></div>
+      </section>
+    `;
+
+    container.appendChild(newsDiv);
+
+    // Eventos filtros comentarios
+    const filterDiv = newsDiv.querySelector(".comments-filter");
+    const input = newsDiv.querySelector("input");
+    const sendBtn = newsDiv.querySelector("button");
+
+    let currentFilter = 'recent';
+
+    filterDiv.querySelectorAll("span").forEach(span => {
+      span.addEventListener("click", () => {
+        currentFilter = span.dataset.filter;
+        filterDiv.querySelectorAll("span").forEach(s => s.classList.remove("active"));
+        span.classList.add("active");
+        renderCommentsForNews(news.id, currentFilter);
+      });
+    });
+
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") sendComment(news.id);
+    });
+
+    sendBtn.addEventListener("click", () => sendComment(news.id));
+
+    newsDiv.currentFilter = () => currentFilter;
+    newsDiv.input = input;
+    newsDiv.sendBtn = sendBtn;
+  });
+}
+
+// Renderizar comentarios por noticia y filtro
+function renderCommentsForNews(newsId, filter = "recent") {
+  const commentsContainer = document.querySelector(`.comments-list[data-news-id="${newsId}"]`);
+  const commentsCountElem = document.querySelector(`.comments-count[data-news-id="${newsId}"]`);
+  if (!commentsContainer || !commentsDataByNews[newsId]) return;
+
+  let comments = [...commentsDataByNews[newsId]];
+
+  if (filter === "recent") {
+    comments.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
+  } else if (filter === "top") {
+    comments.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+  }
+
+  commentsContainer.innerHTML = "";
+  commentsCountElem.textContent = comments.length;
+
+  comments.forEach(comment => {
+    const commentDiv = document.createElement("article");
+    commentDiv.className = "comment";
+    commentDiv.dataset.commentId = comment.id;
+
+    commentDiv.innerHTML = `
+      <div class="user-name">${sanitize(comment.user)}</div>
+      <div class="comment-text">${sanitize(comment.text)}</div>
+      <div class="comment-reactions" data-comment-id="${comment.id}">
+        <button data-type="like">👍 <span class="count">0</span></button>
+        <button data-type="dislike">👎 <span class="count">0</span></button>
+        <button class="heart" data-type="love">❤ <span class="count">0</span></button>
+      </div>
+    `;
+    commentsContainer.appendChild(commentDiv);
+  });
+
+  // Cargar reacciones para comentarios mostrados
+  loadReactionsForComments(newsId);
+}
+
+// Escuchar noticias desde Firestore
+async function listenToNews() {
+  await ensureExampleNews();
+  const newsCol = collection(db, "noticias");
+  onSnapshot(newsCol, snapshot => {
+    newsData = [];
+    snapshot.forEach(docSnap => {
+      newsData.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    renderNews();
+    newsData.forEach(news => listenToComments(news.id));
+    newsData.forEach(news => listenReactionsForNews(news.id));
+  });
+}
+
+// Escuchar comentarios por noticia
+function listenToComments(newsId) {
+  const commentsCol = collection(db, "comentarios");
+  const q = query(commentsCol, orderBy("timestamp", "desc"));
+  onSnapshot(q, snapshot => {
+    commentsDataByNews[newsId] = [];
+    snapshot.forEach(docSnap => {
+      const c = docSnap.data();
+      if (c.newsId === newsId) {
+        commentsDataByNews[newsId].push({ id: docSnap.id, ...c });
+      }
+    });
+    const newsDiv = document.querySelector(`.news-container[data-news-id="${newsId}"]`);
+    const currentFilter = newsDiv?.currentFilter ? newsDiv.currentFilter() : "recent";
+    renderCommentsForNews(newsId, currentFilter);
+  });
+}
+
+// Escuchar reacciones generales para noticia
+function listenReactionsForNews(newsId) {
+  const reactionsCol = collection(db, "noticias", newsId, "reacciones");
+  onSnapshot(reactionsCol, snapshot => {
+    const counts = { like: 0, dislike: 0, love: 0 };
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      if (data.type && counts[data.type] !== undefined) counts[data.type]++;
+    });
+    const reactionBar = document.querySelector(`.reaction-bar[data-news-id="${newsId}"]`);
+    if (!reactionBar) return;
+    reactionBar.querySelectorAll("button").forEach(btn => {
+      const type = btn.dataset.type;
+      btn.querySelector(".count").textContent = counts[type] || 0;
+    });
+  });
+}
+
+// Cargar reacciones para comentarios de una noticia
+function loadReactionsForComments(newsId) {
+  const comments = commentsDataByNews[newsId] || [];
+  comments.forEach(async comment => {
+    const reactionDiv = document.querySelector(`.comment-reactions[data-comment-id="${comment.id}"]`);
+    if (!reactionDiv) return;
+
+    const reactionsCol = collection(db, "comentarios", comment.id, "reacciones");
+    onSnapshot(reactionsCol, snapshot => {
+      const counts = { like: 0, dislike: 0, love: 0 };
+      let userReactionType = null;
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.type && counts[data.type] !== undefined) counts[data.type]++;
+        if (docSnap.id === (currentUser && currentUser.uid)) userReactionType = data.type;
+      });
+
+      reactionDiv.querySelectorAll("button").forEach(btn => {
+        const type = btn.dataset.type;
+        btn.querySelector(".count").textContent = counts[type] || 0;
+        btn.classList.toggle("active", userReactionType === type);
+      });
+    });
+
+    // Eventos click para reaccionar
+    reactionDiv.querySelectorAll("button").forEach(btn => {
+      btn.onclick = async () => {
+        if (!currentUser) return alert("Debes iniciar sesión para reaccionar");
+        const type = btn.dataset.type;
+        const userReactionRef = doc(db, "comentarios", comment.id, "reacciones", currentUser.uid);
+        const userReactionSnap = await getDoc(userReactionRef);
+        const currentReaction = userReactionSnap.exists() ? userReactionSnap.data().type : null;
+
+        if (currentReaction === type) {
+          await deleteDoc(userReactionRef);
+        } else {
+          await setDoc(userReactionRef, { type: type, uid: currentUser.uid });
+        }
+      };
+    });
+  });
+}
+
+// Añadir comentario a noticia específica
+async function sendComment(newsId) {
+  const newsDiv = document.querySelector(`.news-container[data-news-id="${newsId}"]`);
+  const input = newsDiv?.input;
+  const sendBtn = newsDiv?.sendBtn;
+  if (!input || !sendBtn) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+  if (!currentUser) return alert("Debes iniciar sesión para comentar");
+
+  sendBtn.disabled = true;
+  try {
+    await addDoc(collection(db, "comentarios"), {
+      newsId: newsId,
+      user: currentUser.displayName || "Anónimo",
+      uid: currentUser.uid,
+      text: text,
+      likes: 0,
+      timestamp: serverTimestamp()
+    });
+    input.value = "";
+  } catch (e) {
+    alert("Error al enviar comentario.");
+    console.error(e);
+  } finally {
+    sendBtn.disabled = false;
+  }
+}
+
+// Manejo autenticación Google
+document.getElementById("authBtn").addEventListener("click", () => {
+  if (currentUser) {
+    signOut(auth);
+  } else {
+    signInWithPopup(auth, provider);
+  }
+});
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  document.getElementById("authBtn").textContent = user ? `Cerrar sesión (${user.displayName})` : "Iniciar sesión con Google";
+  document.querySelectorAll(".comment-input input").forEach(input => {
+    input.disabled = !user;
+  });
+  document.querySelectorAll(".comment-input button").forEach(btn => {
+    btn.disabled = !user;
+  });
+});
+
+listenToNews();
+</script>
 </body>
 </html>
